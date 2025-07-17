@@ -34,12 +34,66 @@ En ambos casos, la aleatoriedad no fue un elemento decorativo, sino una estrateg
 
 #### Realiza el siguiente experimento y reporta los resultados en tu bitácora:
 
-##### Modifica el código del ejemplo Example 0.1: A Traditional Random Walk.
+1. Modifica el código del ejemplo Example 0.1: A Traditional Random Walk.
 
-##### Antes de ejecutar el código, escribe en tu bitácora qué esperas que suceda.
+   La modificacón que realicé fue la de que cada vez que  el walker caminara se pintara el rastro de un tono aleatorio de azul y además que en vez de ser un punto fuera un circulo para que no se viera tan pequeño (aunque afecta la forma dado que el wlaker esta configurado para moverse un pixel a la vez por lo que el patrón es mas demorado en formarse)
+    El codigo que hice fue este:
 
-##### Ejecuta el código y escribe en tu bitácora qué sucedió realmente.
+´´´js
+// The Nature of Code
+// Daniel Shiffman
+// Modificado por Daniel (Caminata aleatoria con tonos azules)
 
-##### Ocurrió lo que esperabas? ¿Por qué crees que sí o por qué crees que no?
+let walker;
+
+function setup() {
+  createCanvas(340, 640);
+  walker = new Walker();
+  background(0); // Fondo oscuro para resaltar el azul
+}
+
+function draw() {
+  walker.step();
+  walker.show();
+}
+
+class Walker {
+  constructor() {
+    this.x = width / 2;
+    this.y = height / 2;
+  }
+
+  show() {
+    let r = random(0, 30); // rojo
+    let g = random(0, 50);  // verde
+    let b = random(150, 255);  // azul
+    stroke(r,g,b);
+    fill(100); // con esto relleno el circulo de gris
+    circle(this.x, this.y,15);
+  }
+
+  step() {
+    const choice = floor(random(4));
+    if (choice == 0) {
+      this.x++;
+    } else if (choice == 1) {
+      this.x--; // -1  plano cartesiano desde el centro
+    } else if (choice == 2) {
+      this.y++; // +1
+    } else {
+      this.y--;
+    }
+  }
+}
+
+´´´
+
+3. Antes de ejecutar el código, escribe en tu bitácora qué esperas que suceda.
+
+4. Ejecuta el código y escribe en tu bitácora qué sucedió realmente.
+
+5. Ocurrió lo que esperabas? ¿Por qué crees que sí o por qué crees que no?
+
+### Actividad 4
 
 
