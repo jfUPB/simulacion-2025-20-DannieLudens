@@ -30,5 +30,16 @@ Otro ejemplo lo viví en Sistemas Físicos Interactivos 2, donde utilicé la ale
 
 En ambos casos, la aleatoriedad no fue un elemento decorativo, sino una estrategia de diseño interactivo que aumentó el valor de la experiencia. Para mí, aplicar la aleatoriedad significa diseñar sistemas vivos, donde cada ejecución es una oportunidad nueva para descubrir algo distinto.
 
+### Actividad 3 
+
+#### Realiza el siguiente experimento y reporta los resultados en tu bitácora:
+
+##### Modifica el código del ejemplo Example 0.1: A Traditional Random Walk.
+
+##### Antes de ejecutar el código, escribe en tu bitácora qué esperas que suceda.
+
+##### Ejecuta el código y escribe en tu bitácora qué sucedió realmente.
+
+##### Ocurrió lo que esperabas? ¿Por qué crees que sí o por qué crees que no?
 
 
