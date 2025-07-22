@@ -39,10 +39,13 @@ En ambos casos, la aleatoriedad no fue un elemento decorativo, sino una estrateg
    La modificacón que realicé fue la de que cada vez que  el walker caminara se pintara el rastro de un tono aleatorio de azul y además que en vez de ser un punto fuera un circulo para que no se viera tan pequeño (aunque afecta la forma dado que el wlaker esta configurado para moverse un pixel a la vez por lo que el patrón es mas demorado en formarse)
     El codigo que hice fue este:
 
+<details>
+   <summary>Codigo modificado</summary>
+
 ´´´js
 // The Nature of Code
 // Daniel Shiffman
-// Modificado por Daniel (Caminata aleatoria con tonos azules)
+// Modificado (Caminata aleatoria con tonos azules)
 
 let walker;
 
@@ -88,11 +91,22 @@ class Walker {
 
 ´´´
 
-3. Antes de ejecutar el código, escribe en tu bitácora qué esperas que suceda.
+</details>
 
-4. Ejecuta el código y escribe en tu bitácora qué sucedió realmente.
 
-5. Ocurrió lo que esperabas? ¿Por qué crees que sí o por qué crees que no?
+2. Antes de ejecutar el código, escribe en tu bitácora qué esperas que suceda.
+
+   Lo que espero que suceda es que el punto del walker se dibuje mas grande y que los colores del path que deja sean diferentes tonos de azul. 
+
+3. Ejecuta el código y escribe en tu bitácora qué sucedió realmente.
+
+   Lo que ocurrio fue que el punto del walker era un punto y no un circulo el cual se pudiera hacer mas grande, lo otro que ocurrio es que al no haber limitado los colores para que fueran unos tonos especificos de azul dentro del RGB se dibujaban colores aleatorios
+
+4. Ocurrió lo que esperabas? ¿Por qué crees que sí o por qué crees que no?
+
+   No ocurrio lo esperado, sin embargo al hacer las modificaciones como limitar los rangos de color de los tonos azules y cambiar el el walker por un circulo con un radio definido logre que funcionara...
+
+   La invitacion y libertad a equivocarme de esta actividd me ayudo a experimentar y sabes que ocurria si colocaba elementos que se ejecutaran primero para generar visuales diferentes segun mi intencion, lo mismo limitar el rango aleatorio de los colores utilizando por defecto el RGB pero teniendo en cuenta que tambien podria usar el HSB y apoyado de la docuemtnacion que esta en la pagina de p5js
 
 ### Actividad 4
 
