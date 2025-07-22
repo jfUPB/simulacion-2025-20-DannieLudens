@@ -40,9 +40,9 @@ En ambos casos, la aleatoriedad no fue un elemento decorativo, sino una estrateg
     El codigo que hice fue este:
 
 <details>
-   <summary>Codigo modificado</summary>
+<summary>Codigo modificado</summary>
 
-´´´js
+```js
 // The Nature of Code
 // Daniel Shiffman
 // Modificado (Caminata aleatoria con tonos azules)
@@ -89,7 +89,7 @@ class Walker {
   }
 }
 
-´´´
+```
 
 </details>
 
