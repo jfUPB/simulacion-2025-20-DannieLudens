@@ -31,6 +31,17 @@ Ahora que has experimentado con la aleatoriedad y has aplicado estos conceptos e
 
    Walker sobre perlin noise 3D El Concepto de la obra generativa es el de la simulacion de la marea y un barco flotando sobre el mar interactuando sobre ella, voy a usar la aleatoriedad de ruido perlin para afectar como se ve esa marea, la aleatoriedad para afectar el tono de color de la marea segun su altura (pensando en la altura de cada vertice) y con el mouse voy a afectar con la distribucion de probabilidad que tan intenso
 
+   Verificacion de cumplimiento de requisitos, almenos 3 conceptos estudiados combinados:
+   
+- [x] Aleatoriedad
+- [ ] Ruido perlin
+- [ ] Random walker
+- [ ] 3 conceptos combinados
+- [ ] Coherencia y creatividad
+- [ ] Interactiva y generativa en tiempo real
+- [ ] Elemento fisico interactivo (mouse o teclado)
+
+
 3. Codigo del programa
 
 <details>
