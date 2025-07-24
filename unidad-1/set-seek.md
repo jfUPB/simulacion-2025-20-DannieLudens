@@ -229,4 +229,70 @@ function draw() {
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/30a0ae8e-7385-4a76-9555-7247fddfb9a0" />
 
+### Actividad 06
+
+> [!NOTE]
+>
+>  Bitácora
+> Crea un nuevo sketch en p5.js donde modifiques uno de los ejemplos anteriores y adiciones de Lévy flight.
+> Explica por qué usaste esta técnica y qué resultados esberabas obtener.
+> Copia el código en tu bitácora.
+> Coloca en enlace a tu sketch en p5.js en tu bitácora.
+> Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
+
+Recordando el ejemplo del tiburon que esta nadando con calma junto a cardumen y de la nada se lanza al ataque para luego volver a nadar en calma y este comportamiento hacerlo de manera aleatoria
+
+Un Lévy flight es un tipo de movimiento aleatorio donde la mayoría de los pasos son cortos, pero ocasionalmente aparecen saltos largos. A diferencia de la caminata aleatoria tradicional (donde todos los pasos tienen una longitud similar), el Lévy flight usa una distribución de potencia o una distribución personalizada que favorece pasos pequeños pero no descarta los grandes.
+
+Este comportamiento aparece en la naturaleza: por ejemplo, en la forma en que los animales exploran en busca de comida o cómo navega un ojo humano al mirar una imagen.
+
+```js
+let walker;
+
+function setup() {
+  createCanvas(800, 400);
+  walker = new Walker();
+  background(255);
+}
+
+function draw() {
+  walker.step();
+  walker.display();
+}
+
+class Walker {
+  constructor() {
+    this.pos = createVector(width / 2, height / 2);
+  }
+
+  step() {
+    // Dirección aleatoria
+    let step = p5.Vector.random2D();
+
+    // Paso tipo Lévy, pero con un límite razonable para evitar valores extremos
+    let r = constrain(pow(random(1), -1.5), 0, 20);  // Saltos de máximo 20
+    step.mult(r); 
+
+    this.pos.add(step);
+
+    // Limitar al canvas
+    this.pos.x = constrain(this.pos.x, 0, width);
+    this.pos.y = constrain(this.pos.y, 0, height);
+  }
+
+  display() {
+    stroke(0, 50);  // Hacemos más visible el trazo
+    strokeWeight(2); // Aumentamos grosor del punto
+    point(this.pos.x, this.pos.y);
+  }
+}
+
+```
+
+Con esta tecnica se puede evidenciar como el comportamiento del walker aleatorio pega esos saltos que pueden brindar aleatoriedad y sorpresa a la hora de estar a la espectativa de un cambio 
+
+[Codigo p5js](https://editor.p5js.org/)
+
+
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/29438a08-52c0-4cde-b8d3-66b7d70149de" />
 
