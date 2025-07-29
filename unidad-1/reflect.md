@@ -10,13 +10,13 @@ Parte 1
 
 Respuesta: La diferenencia fundamental entre estas dos es que para implementar el random es necesario restringir el rango de valores que se quieren aleatorias mientras que el ruido perlin es generado y aunque tambien se puede restringir su rango es mas utilizado para generar aleatoriedad que agarrar un numero aleatorio de la bolsa de numeros (por asi decirlo)
 
-El Ruido perlin se puede usar para generar texturas por ejemplo en un objeto de blender, tambien se puede usar para modular una onda y generar un sonido, tambien se puede usar para generar terrenos y oleaje, tambien para suavisar la curva de un conjunto de datos distribuidos no uniformes
+El Ruido perlin se puede usar para generar texturas por ejemplo en un objeto de blender, tambien se puede usar para generar noise para luego modular una onda y generar un sonido, tambien se puede usar para generar terrenos y oleaje, tambien para suavisar la curva de un conjunto de datos distribuidos no uniformes o uniformes
 
-El Random se puede usar para elegir un rango de colores, tambien para elegir un numero entre muchos, pensandolo en proyectos seria elegir aleatoriamente un dato que puede estar dentro de un arreglo de manera aleatoria
+El Random se puede usar para elegir un rango de colores, tambien para elegir un numero entre muchos, pensandolo en proyectos seria elegir aleatoriamente un dato que puede estar dentro de un arreglo de manera aleatoria y tambien para elegir posiciones aleatorias
 
-2. Con mis palabras que es una distribucion de probabilidad y cual es la diferencia visual que produce uan caminata aleatoria con una distribucion unifrme y una con distribucion normal
+2. Con mis palabras, que es una distribucion de probabilidad y cual es la diferencia visual que produce uan caminata aleatoria con una distribucion unifrme y una con distribucion normal
 
-Respuesta: La distribucion de probabilidad es como estan distribuidos los datos de manera que que un dato es mas probable que otro con respecto a la media
+Respuesta: La distribucion de probabilidad es cómo estan distribuidos los datos de manera que un dato es mas probable que otro con respecto a la media pero tambien dependen de que tipo de distribucion
 
 la diferencia visual de un random walker con distribucion uniforme a otro con distribucion normal esque el walker en la normal se va a ver mucho mas concentrado caminando casi que en el mismo punto mientras que el walker uniforme podria tener ciertas tendencias a moverse en un espacio mas amplio pero concentrado
 
@@ -42,21 +42,36 @@ La distribución uniforme asigna la misma probabilidad a todos los valores dentr
 
 3. Siento que la interaccion entre los sistemas pero no estoy muy seguro
 
-4. combinaria mejor la aleatoriedad es decir que los peces fueran walkers aleatorios pero cuando el pez principal se acercara su comportamiento fuera de un walker levy flight y que los peces del cardumen nadaran hacia la comida que esta mas cerca de cada uno y lo consumiera volviendose un pez mas grande cada vez
+4. combinaria mejor la aleatoriedad es decir que los peces fueran walkers aleatorios pero mas suavizado cuando el pez principal se acercara su comportamiento fuera de un walker levy flight y que los peces del cardumen nadaran hacia la comida que esta mas cerca de cada uno y lo consumiera volviendose un pez mas grande cada vez (nueva implementación)
 
 ### Actividad 10
 
-Bitacora de Parra: URL
+Bitacora de Parra [](URL.com)
 
-Comentario de retroaliemntacion constructiva para la Act8 de Parra
+Giff de su obra generativa:
+
+
+
+#### Comentario de retroaliemntacion constructiva para la Act8 de Parra
+
+Su Obra generativa sobre fuegos artificiales mediante la implementacion de particulas que se dispersan de manera aleatoria desde el centro me parecio muy chevere, no solo por que aplico conceptos de probabilidad para el cambio de color o la distribucion de las particulas sino porque logró encapsular en un mismo concepto estos elementos para que el espectador tuviese una experiencia visual unica cada vez
+
+El feedback que le dí fue que le podria agregar el concepto de distribucion no uniforme a la aparicion del fuego artificial para que no siempre fuera en el centro sino en un rango aleatorio horizontal y adicional que las particulas mientras se disiparan no se borraran inmeditamente al dar click para generar un nuevo fuego artificial sino que tambien se fueran desapareciendo lentamente de esta manera darle continuidad a la obra conservando los fuegos artificales anteriores
 
 
 
 ### Actividad 11
 
-1. Los ejemplos alternos a los mostrados en el libro para entender mejor como se usan esos conceptos en otros espacios, ayuda a mejorar la perpectiva y conectar con experiencias clave que podemos identificar, esto deberia mantenerse si o si
+1. **Continuar:** Los ejemplos alternos a los mostrados en el libro para entender mejor como se usan esos conceptos en otros espacios, ayuda a mejorar la perpectiva y conectar con experiencias clave que podemos identificar, esto deberia mantenerse si o si.
 
+   Adicionalmente los plazos de entrega establecidos este semestre suponen un reto que le agrega a esta gran receta no solo un objetivo o meta sino tambien un limite y de una u otra manera ayuda a tener cierta presion que acelera ese instinto o deseo de cumplir de buena manera (no se porque mi cerebro trabaja mejor bajo presion es como si me obligara a comprometerme más)
 
-2. No hubo ninguna actividad o concepto que me pareciera redundate, confuso o
+3. **Dejar de hacer:** Quizas lo unico que me parece que deberia dejar de hacerse en el curso seria dejar bloqueado la siguiente unidad mientras estamos en la unidad anterior por ejemplo en la unidad 1 llegamos al reflect y me gustaria trabajar en la unidad 2 para ir adelantando y no esperar al martes para empezar con el seek
 
-3. 
+    No hubo ningun Concepto que me pareciera redundate, confuso hasta el momento todo a sido muy claro y util
+
+3. **Empezar a hacer:** Me hizo falta en la ultima clase ver las obras generativas de los compañeros tipo un showcase de todos, porque brinda panoramas de ideas de concepto que los demas han explorado
+
+4. **Balance teoría-práctica:** Analizar los ejemplos del texto guia tanto de los ejemplos de la pagina del curso como de nature of code y la documentacion de p5js me han parecido muy utiles e ilustrativos sobre todo para entender los conceptos aplicados y visualmente la logica detras, siento que todavia en la practica me quedo mucho tiempo leyendo, modificando y haciendo preguntas a la IA sobre el funcionamiento de los ejemplos e ideas que se me van ocurriendo, lo cual no es util para las entregas agiles del curso
+
+5. **Comentario adicional:** Por el momento me esta encantando la metodologia del curso, si bien empecé algo atrasado, es algo que no me estoy permitiendo más para mantener esa disciplina.
