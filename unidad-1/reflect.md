@@ -427,10 +427,11 @@ class Comida {
 
 ### Actividad 10
 
-Bitacora de Parra [](URL.com)
+[Bitacora de Parra](https://github.com/jfUPB/simulacion-2025-20-Nilexpat/blob/unidad1/reflect/unidad-1/reflect.md )
 
 Giff de su obra generativa:
 
+<img src="https://github.com/user-attachments/assets/dcc2a45a-4135-43a3-8c75-2d559df61898" width="400">
 
 
 #### Comentario de retroaliemntacion constructiva para la Act8 de Parra
