@@ -253,3 +253,57 @@ Cuando se pasa un `p5.Vector` a una función se pasa por referencia significa qu
 Para evitar modificar el original, es necesario hacer una copia explícita con `v.copy()`
 
 Esta copia es completamente independiente del objeto original, y permite experimentar o aplicar transformaciones sin efectar al original
+
+### Actividad 4
+
+#### ¿Para qué sirve el método mag()?
+
+El método `mag()` calcula la magnitud (longitud) del vector, es decir, qué tan largo es. Se obtiene aplicando el teorema de Pitágoras:
+
+mag = sqrt(x^2 + y^2 + z^2)
+
+#### ¿Cuál es la diferencia entre mag() y magSq()? ¿Cuál es más eficiente?
+
+`magSq()` calcula la magnitud al cuadrado del vector:
+
+magSq = x^2 + y^2 + z^2
+
+Es más eficiente que `mag()` porque evita la operación de raíz cuadrada, que es más costosa computacionalmente.
+
+Se usa cuando solo se necesita comparar magnitudes, no conocer el valor exacto.
+
+#### ¿Para qué sirve el método `normalize()`?
+
+Este método convierte el vector en un vector unitario, es decir, mantiene su dirección pero ajusta su longitud a 1. Sirve para trabajar con direcciones puras sin importar la magnitud original.
+
+#### ¿Para qué sirve el método `dot()`? 
+
+El método `dot()` indica que tanto dos vectores apuntan en la misma dirección. Si el resultado es alto, van en la misma dirección. Si es cero, son perpendiculares.
+
+En una frase: "Sirve para saber cuán alineados están dos vectores."
+
+Diferencia entre `dot()` estático e instancia
+
+v1.dot(v2): se usa desde una instancia de vector.
+
+p5.Vector.dot(v1, v2): se usa como método estático desde la clase.
+Ambas formas hacen lo mismo, pero la forma de uso cambia según el contexto.
+
+#### ¿Cuál es la interpretación geométrica del producto cruzado (cross())?
+
+El producto cruzado entre dos vectores genera un tercer vector perpendicular al plano definido por los dos originales.
+La magnitud del nuevo vector es igual al área del paralelogramo formado por los dos vectores.
+La orientación del vector resultante depende del orden de los vectores y sigue la regla de la mano derecha.
+Este método es útil para calcular normales en superficies o rotaciones en 3D.
+
+#### ¿Para qué sirve el método dist()?
+
+`dist()` calcula la distancia entre dos vectores, como si fueran puntos en el espacio.
+Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y comida en una simulación.
+
+#### ¿Para qué sirven los métodos normalize() y limit()?
+
+`normalize()`: ajusta el vector para que tenga magnitud 1 sin cambiar su dirección.
+
+`limit(valor)`: restringe la magnitud máxima del vector al valor dado.
+Ambos son útiles para controlar comportamientos como velocidad constante o límite de aceleración en un sistema dinámico.
