@@ -1189,17 +1189,20 @@ function draw() {
 
 #### Experimento con la aceleracion
 
-Perfecto, trabajémoslo parte por parte con explicaciones claras y progresivas. Empecemos con el objetivo de la **Actividad 07** y el significado de la frase clave del libro:
+Durante este experimento exploré el efecto de distintos tipos de aceleración sobre un objeto en movimiento:
 
----
+- **Aceleración constante** genera una trayectoria uniforme con velocidad creciente en una dirección fija.
+- **Aceleración aleatoria** produce un movimiento errático, similar al de partículas en un fluido o el viento cambiante.
+- **Aceleración hacia el mouse** crea una dinámica de persecución, como si el objeto estuviera “vivo” y consciente del cursor.
 
-## Actividad 07: Experimentando con la aceleración
+Al combinar los tres tipos y alternar entre ellos, pude observar con claridad cómo pequeñas modificaciones en la lógica de la aceleración pueden tener efectos drásticos en la calidad del movimiento. Esta actividad refuerza el principio central de “Motion 101”: definir la aceleración y dejar que el sistema propague sus efectos a través de la velocidad y la posición.
 
-### Frase del libro:
+
+#### Frase del libro:
 
 > “The goal for programming motion is to come up with an algorithm for calculating acceleration and then let the trickle-down effect work its magic.”
 
-### ¿Qué significa?
+#### ¿Qué significa?
 
 Esta frase plantea un principio fundamental del movimiento con vectores:
 en lugar de manipular directamente la posición o la velocidad de un objeto, **se diseña una regla (algoritmo) para calcular su aceleración**. A partir de esa aceleración, **el resto del movimiento sucede de forma natural** por el efecto acumulativo:
@@ -1213,13 +1216,18 @@ Este efecto en cadena es lo que el autor llama “trickle-down effect”.
 
 Ahora vamos a construir el experimento en tres partes. En cada una probaremos un tipo diferente de aceleración y luego haremos observaciones específicas. Comenzamos con el primer tipo.
 
+<details>
+  <summary>Parte 1: Aceleración constante</summary>
+ 
+
+
 ---
 
-### Parte 1: Aceleración constante
+#### Parte 1: Aceleración constante
 
 <img src="https://github.com/user-attachments/assets/27bdba57-11e5-4db8-bed3-1e58123aa8d3" width="400">
 
-[link al p5](https://editor.p5js.org/DanielZafiro/sketches/NqfJtHyLS)
+[link al ejemplo en p5js](https://editor.p5js.org/DanielZafiro/sketches/NqfJtHyLS)
 
 #### Código base
 
@@ -1280,5 +1288,162 @@ class Mover {
 
 ---
 
+Perfecto, continuemos con la **Parte 2: Aceleración aleatoria**, manteniendo el mismo enfoque didáctico y progresivo:
+
+---
+
+</details>
+
+<details>
+ <summary>Aceleracion aleatoria</summary>
+ 
+
+
+#### Parte 2: Aceleración aleatoria
+
+<img src="https://github.com/user-attachments/assets/8eaab402-ca3d-43b6-aaff-bcb2383ac22a" width="400">
+
+
+
+
+[link al ejemplo en p5js](https://editor.p5js.org/DanielZafiro/sketches/LuNcN7z0P)
+
+#### Modificación en el código
+
+Para generar aceleraciones aleatorias, cambiaremos la línea que fija la aceleración constante por una línea que le dé al objeto un empujón en una dirección aleatoria en cada frame:
+
+```js
+update() {
+  // Aceleración aleatoria en cada frame
+  let randomAccel = p5.Vector.random2D();
+  randomAccel.setMag(0.2); // Magnitud constante para que no sea caótica
+  this.acceleration = randomAccel;
+
+  this.velocity.add(this.acceleration);
+  this.position.add(this.velocity);
+}
+```
+
+#### Observaciones
+
+* La aceleración **cambia de dirección en cada frame**, lo que provoca un movimiento **errático** o **caótico**.
+* A pesar del desorden, el objeto no se mueve sin rumbo totalmente al azar: la **velocidad sigue acumulando los efectos anteriores**, lo que suaviza un poco la trayectoria.
+* En lugar de quedarse en un lugar o hacer zigzags instantáneos, el objeto **tiende a vagar** por la pantalla como si estuviera **navegando con viento cambiante**.
+* Si no hay fricción o límites, la velocidad seguirá creciendo, por lo que con el tiempo el objeto puede moverse más rápido y más lejos.
+  (Se puede controlar esto con `velocity.limit(maxSpeed)` si se desea).
+
+Este tipo de movimiento es útil para simular comportamientos como:
+
+* Partículas flotando en un fluido
+* Insectos o criaturas pequeñas moviéndose sin rumbo fijo
+* Efectos naturales donde hay fuerzas impredecibles (viento, agua, etc.)
+
+---
+
+</details>
+
+<details>
+  <summary>Aceleracion hacia el mouse</summary>
+
+
+#### Parte 3: Aceleración hacia el mouse
+
+<img src="https://github.com/user-attachments/assets/642445a9-b782-41d1-91e4-04773ec597c6" width="400">
+
+
+
+
+
+[link al ejemplo en p5js](https://editor.p5js.org/DanielZafiro/sketches/7-p3pabDM)
+
+#### Modificación en el código
+
+Para aplicar una aceleración que **apunte hacia el cursor**, crearemos un vector que vaya desde la posición del objeto hacia el mouse y lo usaremos como aceleración.
+
+```js
+update() {
+  // Aceleración dirigida hacia el mouse
+  let mouse = createVector(mouseX, mouseY);
+  let dir = p5.Vector.sub(mouse, this.position); // Vector desde el objeto hasta el mouse
+  dir.setMag(0.2); // Establecer la magnitud de la aceleración
+
+  this.acceleration = dir;
+
+  this.velocity.add(this.acceleration);
+  this.position.add(this.velocity);
+}
+```
+
+#### Observaciones
+
+* El objeto **acelera cada vez más rápidamente** hacia el cursor, como si estuviera **atraído gravitacionalmente**.
+* Si el cursor se mueve, la aceleración cambia de dirección para seguirlo, creando un comportamiento de **persecución dinámica**.
+* A medida que el objeto se acerca al cursor, su velocidad puede hacerse muy alta si no se limita, causando que lo sobrepase y tenga que girar para regresar, lo cual genera una especie de **oscilación alrededor del mouse**.
+* Si se añade una línea como `this.velocity.limit(5)`, el movimiento se vuelve más fluido y controlado.
+
+Este patrón es muy útil para simular:
+
+* Comportamiento de agentes inteligentes (enemigos, seguidores, partículas inteligentes)
+* Imitaciones de gravedad local
+* Movimientos dirigidos en sistemas interactivos (como menús que siguen el puntero o visualizaciones de datos interactivas)
+
+
+---
+
+</details>
+
+<details>
+  <summary>Combinacion de aceleraciones</summary>
+
+
+#### Combinación de los tres tipos de aceleración
+
+#### ¿Cómo se implementa?
+
+Una forma práctica de combinar los tres tipos es alternar entre ellos con una tecla o aplicar cada uno en una situación distinta. Aquí te muestro un ejemplo sencillo donde se puede cambiar entre **aceleración constante**, **aleatoria** y **hacia el mouse** con las teclas `1`, `2` y `3`.
+
+```js
+let modo = 1; // Modo inicial
+
+function keyPressed() {
+  if (key === '1') modo = 1; // Constante
+  if (key === '2') modo = 2; // Aleatoria
+  if (key === '3') modo = 3; // Hacia el mouse
+}
+```
+
+Luego, en el método `update()` del objeto:
+
+```js
+update() {
+  if (modo === 1) {
+    // Aceleración constante
+    this.acceleration = createVector(0.05, 0);
+  } else if (modo === 2) {
+    // Aceleración aleatoria
+    this.acceleration = p5.Vector.random2D().mult(0.5);
+  } else if (modo === 3) {
+    // Aceleración hacia el mouse
+    let mouse = createVector(mouseX, mouseY);
+    let dir = p5.Vector.sub(mouse, this.position);
+    dir.setMag(0.2);
+    this.acceleration = dir;
+  }
+
+  this.velocity.add(this.acceleration);
+  this.position.add(this.velocity);
+  this.velocity.limit(6); // Límite para evitar desbordes
+}
+```
+
+#### ¿Qué se observa?
+
+* Puedes comparar en tiempo real cómo se comporta el objeto con cada tipo de aceleración.
+* Esto te permite **entender cómo cambia la trayectoria** dependiendo de la fuente de aceleración.
+* Es ideal para aprender a **modular el movimiento** de agentes en un entorno interactivo.
+
+---
+
+</details>
 
 
