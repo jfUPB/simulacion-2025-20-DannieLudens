@@ -655,7 +655,7 @@ El **producto cruz** (o **cross product**) entre dos vectores produce **un nuevo
 
 ---
 
-### Ejemplo visual (conceptual):
+#### Ejemplo visual (conceptual):
 
 Imagina dos vectores en 3D:
 
@@ -754,7 +754,7 @@ En p5.js, los métodos `normalize()` y `limit()` nos ayudan a trabajar mejor con
 
 
 
-#### 🎯 ¿Qué son `normalize()` y `limit()` en `p5.Vector`?
+#### ¿Qué son `normalize()` y `limit()` en `p5.Vector`?
 
 Son dos **herramientas especiales** que nos ayudan a **controlar la magnitud de un vector** sin cambiar hacia dónde apunta.
 
@@ -1295,7 +1295,7 @@ Perfecto, continuemos con la **Parte 2: Aceleración aleatoria**, manteniendo el
 </details>
 
 <details>
- <summary>Aceleracion aleatoria</summary>
+ <summary>Parte 2: Aceleracion aleatoria</summary>
  
 
 
@@ -1343,7 +1343,7 @@ Este tipo de movimiento es útil para simular comportamientos como:
 </details>
 
 <details>
-  <summary>Aceleracion hacia el mouse</summary>
+  <summary>Parte 3: Aceleracion hacia el mouse</summary>
 
 
 #### Parte 3: Aceleración hacia el mouse
@@ -1445,5 +1445,6 @@ update() {
 ---
 
 </details>
+
 
 
