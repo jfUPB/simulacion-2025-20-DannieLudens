@@ -1398,6 +1398,9 @@ Este patrón es muy útil para simular:
 
 #### Combinación de los tres tipos de aceleración
 
+<img src="https://github.com/user-attachments/assets/0038ea9c-79c9-4749-a7ad-11285d7c1169" width="400">
+
+
 [link al ejemplo](https://editor.p5js.org/DanielZafiro/sketches/SYO3suAX0)
 
 #### ¿Cómo se combinan las aceleraciones?
@@ -1488,6 +1491,7 @@ Esto representa un modelo más realista del movimiento, como si el objeto estuvi
 ---
 
 </details>
+
 
 
 
