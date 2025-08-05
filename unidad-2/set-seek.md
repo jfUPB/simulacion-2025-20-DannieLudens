@@ -732,7 +732,7 @@ El método `dist()` en p5.js se usa para **calcular la distancia entre dos punto
 > [!NOTE]
 > 
 > `dist()` calcula la distancia entre dos vectores, como si fueran puntos en el espacio.
-Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y comida en la obra generativa de la unidad anterior
+Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y comida en la [obra generativa](https://editor.p5js.org/DanielZafiro/sketches/6Q7fMKdSM) de la unidad anterior
 
 
 ---
@@ -742,12 +742,88 @@ Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y 
 
 #### ¿Para qué sirven los métodos normalize() y limit()?
 
-`normalize()`: ajusta el vector para que tenga magnitud 1 sin cambiar su dirección.
+Imagina que tienes una linterna (dirección) con un haz de luz (vector):
 
-`limit(valor)`: restringe la magnitud máxima del vector al valor dado.
-Ambos son útiles para controlar comportamientos como velocidad constante o límite de aceleración en un sistema dinámico.
+* `normalize()` → Mantienes el haz del mismo largo, **solo te interesa hacia dónde estás apuntando**.
+* `limit()` → Le pones un tope a la intensidad del haz para **que no alumbre más de la cuenta**.
+
+En p5.js, los métodos `normalize()` y `limit()` nos ayudan a trabajar mejor con vectores. El método `normalize()` se usa cuando queremos conservar la dirección de un vector pero no su tamaño, es decir, cuando solo nos interesa **hacia dónde va** un objeto, no **qué tan lejos está**. Esto es útil, por ejemplo, para mover algo con velocidad constante en una dirección específica. Por otro lado, `limit()` nos permite ponerle un tope al tamaño del vector, lo que sirve para controlar **la velocidad máxima** de algo. Es como decirle a un objeto “puedes moverte en esa dirección, pero no más rápido que esto”. Ambos métodos ayudan a tener más control sobre los movimientos y fuerzas en una simulación.
+
+<details>
+  <summary>más elaborado</summary>
+
+
+
+#### 🎯 ¿Qué son `normalize()` y `limit()` en `p5.Vector`?
+
+Son dos **herramientas especiales** que nos ayudan a **controlar la magnitud de un vector** sin cambiar hacia dónde apunta.
+
+Para entenderlo mejor, imagina que un vector es como **una flecha**:
+
+* La **dirección** de la flecha te dice hacia dónde va.
+* El **tamaño (magnitud)** te dice qué tan fuerte o rápido va.
+
+---
+
+#### `normalize()` – “Solo quiero saber a dónde ir”
+
+- **¿Qué hace?**
+
+`normalize()` toma una flecha (vector) y la **hace del mismo tamaño siempre**, sin cambiar su dirección. Ese tamaño será **exactamente 1**.
+
+> Es como si solo te interesara la dirección, pero no qué tan lejos está el objetivo.
+
+- **¿Para qué sirve?**
+
+Para saber **la dirección exacta** a la que quieres moverte o aplicar una fuerza, **sin importar la distancia**.
+
+- **Ejemplo:**
+
+Imagina que estás en un videojuego y quieres que tu personaje **siempre corra hacia el mouse**, pero a una **velocidad constante**, sin importar si el mouse está cerca o lejos.
+Entonces haces esto:
+
+```js
+let direccion = createVector(mouseX - x, mouseY - y);
+direccion.normalize(); // ahora solo tiene dirección, no velocidad
+direccion.mult(velocidadConstante); // ahora sí lo hacemos avanzar
+```
+
+---
+
+#### `limit()` – “¡No vayas tan rápido!”
+
+- **¿Qué hace?**
+
+`limit()` pone un **límite máximo** al tamaño (magnitud) de un vector.
+
+> Si la flecha es más larga de lo permitido, la acorta. Si ya es más corta, la deja igual.
+
+- **¿Para qué sirve?**
+
+Para **evitar que algo se mueva demasiado rápido** o aplique demasiada fuerza.
+
+- **Ejemplo:**
+
+Si tienes un pez que nada, pero a veces se asusta y acelera demasiado, puedes hacer esto:
+
+```js
+pez.velocidad.limit(4); // que nunca vaya más rápido que 4
+```
+
+---
+
+#### Comparación sencilla
+
+| Método        | ¿Qué hace?                               | ¿Para qué sirve?                         |
+| ------------- | ---------------------------------------- | ---------------------------------------- |
+| `normalize()` | Cambia el tamaño a 1                     | Para tener solo dirección, sin velocidad |
+| `limit()`     | Pone un tope máximo al tamaño del vector | Para controlar la velocidad o fuerza     |
+
 
 </details>
+
+</details>
+
 
 
 
