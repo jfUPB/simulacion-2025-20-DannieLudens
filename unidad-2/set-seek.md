@@ -254,7 +254,11 @@ Para evitar modificar el original, es necesario hacer una copia explícita con `
 
 Esta copia es completamente independiente del objeto original, y permite experimentar o aplicar transformaciones sin efectar al original
 
+---
+
 ### Actividad 4
+
+#### Respuesta a preguntas:
 
 <details>
  <summary>¿Para qué sirve el método mag()? Nota que hay otro método llamado magSq(). ¿Cuál es la diferencia entre ambos? ¿Cuál es más eficiente?</summary> 
@@ -345,13 +349,17 @@ Como diseñadores de obras generativas no necesitamos tener tanta exactitud como
 
 </details>
 
+---
+
+<img width="600" src="https://github.com/user-attachments/assets/b9f03ceb-b201-4653-90ea-c975abb8d364" />
+
 <details>
  <summary>¿Para qué sirve el método normalize()?</summary>
 
 
 > Este método convierte el vector en un vector unitario, es decir, mantiene su dirección pero ajusta su longitud a 1. Sirve para trabajar con direcciones puras sin importar la magnitud original.
 
-<img width="600" src="https://github.com/user-attachments/assets/b9f03ceb-b201-4653-90ea-c975abb8d364" />
+
 
 **Ejemplo: Comparando un vector original con su versión normalizada**
 
@@ -474,6 +482,7 @@ Si intentas normalizar un vector con magnitud 0, el método no puede determinar 
  
 </details>
 
+---
 
 <details>
    <summary>Te encuentras con un periodista en la calle y te pregunta ¿Para qué sirve el método dot()? ¿Qué le responderías en un frase?</summary>
@@ -513,6 +522,7 @@ let resultado = a.dot(b);  // resultado = 1*3 + 2*4 = 11
  
 </details>
 
+---
 
 <details>
   <summary>El método dot() tiene una versión estática y una de instancia. ¿Cuál es la diferencia entre ambas?</summary>
@@ -552,6 +562,9 @@ let resultado = a.dot(b);  // resultado = 1*3 + 2*4 = 11
  
 </details>
 
+---
+
+<img src="https://github.com/user-attachments/assets/4e106128-56fd-49e1-bed0-34ae0809fe82" width="600">
 
 <details>
   <summary>Ahora el mismo periodista curioso de antes te pregunta si le puedes dar una intuición geométrica acerca del producto cruz. Entonces te pregunta ¿Cuál es la interpretación geométrica del producto cruz de dos vectores? Tu respuesta debe incluir qué pasa con la orientación y la magnitud del vector resultante.</summary>
@@ -559,8 +572,6 @@ let resultado = a.dot(b);  // resultado = 1*3 + 2*4 = 11
 > Esta pregunta es clave para comprender el comportamiento espacial de los vectores.
 
  éste es un ejemplo simple en p5.js usando `WEBGL` para visualizar el producto cruzado (`cross`) de dos vectores en el espacio 3D:
-
-<img src="https://github.com/user-attachments/assets/4e106128-56fd-49e1-bed0-34ae0809fe82" width="600">
 
 * Un vector rojo (`v1`) hacia la derecha.
 * Un vector verde (`v2`) hacia arriba.
@@ -657,37 +668,77 @@ El producto cruz `a.cross(b)` da como resultado:
 
 </details>
 
+---
+
+<img src="https://github.com/user-attachments/assets/05a18f1a-94e5-4551-9c23-4c659a2ab090" width="400">
 
 <details>
   <summary>¿Para que te puede servir el método dist()?</summary>
 
-
- 
-</details>
-
-#### ¿Cuál es la interpretación geométrica del producto cruzado (cross())?
-
-El producto cruzado entre dos vectores genera un tercer vector perpendicular al plano definido por los dos originales.
-La magnitud del nuevo vector es igual al área del paralelogramo formado por los dos vectores.
-La orientación del vector resultante depende del orden de los vectores y sigue la regla de la mano derecha.
-Este método es útil para calcular normales en superficies o rotaciones en 3D.
-
-
-
-
-continuare aqui
-
-
-
 #### ¿Para qué sirve el método dist()?
 
-`dist()` calcula la distancia entre dos vectores, como si fueran puntos en el espacio.
-Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y comida en una simulación.
+[Link a p5js ejemplo de dist()](https://editor.p5js.org/DanielZafiro/sketches/kMsg8vIW_)
+
+<details>
+  <summary>sketch.js ejemplo de dist()</summary>
+
+```js
+let x1 = 100, y1 = 200;
+let x2, y2;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(240);
+
+  x2 = mouseX;
+  y2 = mouseY;
+
+  // Dibuja los puntos
+  fill(255, 0, 0);
+  ellipse(x1, y1, 20, 20);
+  fill(0, 0, 255);
+  ellipse(x2, y2, 20, 20);
+
+  // Línea entre los puntos
+  stroke(0);
+  line(x1, y1, x2, y2);
+
+  // Distancia
+  let d = dist(x1, y1, x2, y2);
+  noStroke();
+  fill(0);
+  textSize(16);
+  text("Distancia: " + nf(d, 1, 2), 10, height - 20);
+}
+
+```
+</details>
+
+El método `dist()` en p5.js se usa para **calcular la distancia entre dos puntos en el espacio** (ya sea en 2D o 3D). Es especialmente útil cuando quieres saber **qué tan lejos están dos objetos o entidades entre sí**, lo cual es muy común en simulaciones interactivas, animaciones o videojuegos.
+
+#### Aplicaciones típicas de `dist()`:
+
+* Ver si un objeto está lo suficientemente cerca de otro para activar una interacción.
+* Detectar colisiones suaves entre partículas o entidades.
+* Determinar qué tan lejos se ha desplazado un objeto desde un punto inicial.
+* Crear efectos que dependen de la proximidad (como cambiar color, tamaño o velocidad).
 
 
+</details>
+
+> [!NOTE]
+> 
+> `dist()` calcula la distancia entre dos vectores, como si fueran puntos en el espacio.
+Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y comida en la obra generativa de la unidad anterior
 
 
+---
 
+<details>
+  <summary>¿Para qué sirven los métodos normalize() y limit()?</summary>
 
 #### ¿Para qué sirven los métodos normalize() y limit()?
 
@@ -695,4 +746,9 @@ Es útil para saber qué tan lejos están dos objetos, como por ejemplo peces y 
 
 `limit(valor)`: restringe la magnitud máxima del vector al valor dado.
 Ambos son útiles para controlar comportamientos como velocidad constante o límite de aceleración en un sistema dinámico.
+
+</details>
+
+
+
 
