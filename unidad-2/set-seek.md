@@ -1398,53 +1398,95 @@ Este patrón es muy útil para simular:
 
 #### Combinación de los tres tipos de aceleración
 
-#### ¿Cómo se implementa?
+#### ¿Cómo se combinan las aceleraciones?
 
-Una forma práctica de combinar los tres tipos es alternar entre ellos con una tecla o aplicar cada uno en una situación distinta. Aquí te muestro un ejemplo sencillo donde se puede cambiar entre **aceleración constante**, **aleatoria** y **hacia el mouse** con las teclas `1`, `2` y `3`.
+La aceleración es una **fuerza resultante** que puede ser la suma de múltiples fuerzas (en este caso: constante, aleatoria y hacia el mouse). Para lograr eso, simplemente sumamos tres vectores distintos y usamos esa suma como la aceleración final.
 
-```js
-let modo = 1; // Modo inicial
+---
 
-function keyPressed() {
-  if (key === '1') modo = 1; // Constante
-  if (key === '2') modo = 2; // Aleatoria
-  if (key === '3') modo = 3; // Hacia el mouse
+#### Código actualizado para combinar las 3 aceleraciones:
+
+```javascript
+let mover;
+
+function setup() {
+  createCanvas(340, 360);
+  mover = new Mover();
 }
-```
 
-Luego, en el método `update()` del objeto:
+function draw() {
+  background(255);
+  mover.update();
+  mover.edges();
+  mover.show();
+}
 
-```js
-update() {
-  if (modo === 1) {
+class Mover {
+  constructor() {
+    this.position = createVector(width / 2, height / 2);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+  }
+
+  update() {
     // Aceleración constante
-    this.acceleration = createVector(0.05, 0);
-  } else if (modo === 2) {
+    let a1 = createVector(0.05, 0);
+    
     // Aceleración aleatoria
-    this.acceleration = p5.Vector.random2D().mult(0.5);
-  } else if (modo === 3) {
+    let a2 = p5.Vector.random2D().mult(0.3);
+
     // Aceleración hacia el mouse
     let mouse = createVector(mouseX, mouseY);
     let dir = p5.Vector.sub(mouse, this.position);
-    dir.setMag(0.2);
-    this.acceleration = dir;
+    dir.setMag(0.2); // controlamos su magnitud
+    let a3 = dir;
+
+    // Combinamos todas las aceleraciones
+    this.acceleration = createVector(0, 0); // reiniciar
+    this.acceleration.add(a1);
+    this.acceleration.add(a2);
+    this.acceleration.add(a3);
+
+    // Aplicamos aceleración al movimiento
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(6);
+    this.position.add(this.velocity);
   }
 
-  this.velocity.add(this.acceleration);
-  this.position.add(this.velocity);
-  this.velocity.limit(6); // Límite para evitar desbordes
+  edges() {
+    if (this.position.x > width || this.position.x < 0) {
+      this.velocity.x *= -1;
+    }
+    if (this.position.y > height || this.position.y < 0) {
+      this.velocity.y *= -1;
+    }
+  }
+
+  show() {
+    fill(127);
+    stroke(0);
+    ellipse(this.position.x, this.position.y, 32);
+  }
 }
 ```
 
-#### ¿Qué se observa?
+---
 
-* Puedes comparar en tiempo real cómo se comporta el objeto con cada tipo de aceleración.
-* Esto te permite **entender cómo cambia la trayectoria** dependiendo de la fuente de aceleración.
-* Es ideal para aprender a **modular el movimiento** de agentes en un entorno interactivo.
+#### 📝 Explicación conceptual
+
+Este enfoque responde a la idea que propone *The Nature of Code*:
+
+> “El objetivo es calcular una aceleración y dejar que el efecto dominó haga su magia”.
+
+En este caso, **calculamos tres aceleraciones distintas**, las combinamos, y **el resto del sistema (velocidad, posición)** se actualiza automáticamente como efecto de esa única aceleración resultante.
+
+Esto representa un modelo más realista del movimiento, como si el objeto estuviera siendo empujado por diferentes fuerzas al mismo tiempo: una constante (como el viento), una aleatoria (como turbulencia) y otra dirigida (como si el objeto persiguiera algo).
+
 
 ---
 
 </details>
+
 
 
 
