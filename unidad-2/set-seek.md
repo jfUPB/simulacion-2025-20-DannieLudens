@@ -1398,6 +1398,8 @@ Este patrón es muy útil para simular:
 
 #### Combinación de los tres tipos de aceleración
 
+[link al ejemplo](https://editor.p5js.org/DanielZafiro/sketches/SYO3suAX0)
+
 #### ¿Cómo se combinan las aceleraciones?
 
 La aceleración es una **fuerza resultante** que puede ser la suma de múltiples fuerzas (en este caso: constante, aleatoria y hacia el mouse). Para lograr eso, simplemente sumamos tres vectores distintos y usamos esa suma como la aceleración final.
@@ -1472,7 +1474,7 @@ class Mover {
 
 ---
 
-#### 📝 Explicación conceptual
+#### Explicación conceptual
 
 Este enfoque responde a la idea que propone *The Nature of Code*:
 
@@ -1486,6 +1488,7 @@ Esto representa un modelo más realista del movimiento, como si el objeto estuvi
 ---
 
 </details>
+
 
 
 
