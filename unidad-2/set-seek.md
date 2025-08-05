@@ -824,7 +824,461 @@ pez.velocidad.limit(4); // que nunca vaya más rápido que 4
 
 </details>
 
+## Actividad 5
 
+### Interpolamos?
+
+<details>
+  <summary>Enunciado</summary>
+
+> Vas a tomar como inspiración este ejemplo de la referencia de p5.js:
+ 
+<details>
+   <summary>sketch.js </summary>
+
+```js
+function setup() {
+    createCanvas(100, 100);
+}
+
+function draw() {
+    background(200);
+
+    let v0 = createVector(50, 50);
+    let v1 = createVector(30, 0);
+    let v2 = createVector(0, 30);
+    let v3 = p5.Vector.lerp(v1, v2, 0.5);
+    drawArrow(v0, v1, 'red');
+    drawArrow(v0, v2, 'blue');
+    drawArrow(v0, v3, 'purple');
+}
+
+function drawArrow(base, vec, myColor) {
+    push();
+    stroke(myColor);
+    strokeWeight(3);
+    fill(myColor);
+    translate(base.x, base.y);
+    line(0, 0, vec.x, vec.y);
+    rotate(vec.heading());
+    let arrowSize = 7;
+    translate(vec.mag() - arrowSize, 0);
+    triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+    pop();
+}
+```
+    
+</details>
+
+Vas a modificarlo para generar este resultado
+
+<img width="436" height="437" alt="image" src="https://juanferfranco.github.io/simulacion-2025-20/_astro/vectorLerp.CTzOmtf1_2iKxEf.webp" />
+
+- Analiza cómo funciona el método `lerp()`.
+- Nota que además de la interpolación lineal de vectores, también puedes hacer interpolación lineal de colores con el método `lerpColor()`.
+
+Dedica un tiempo a estudiar cómo se dibuja una flecha en el método `drawArrow()`
+
+> En tu bitácora escribe:
+> 
+> - El código que genera el resultado que te pedí.
+> - ¿Cómo funciona lerp() y lerpColor().
+> - ¿Cómo se dibuja una flecha usando drawArrow()?
+ 
+</details>
+
+<details>
+  <summary>Respuesta</summary>
+
+<details>
+   <summary>sketch.js modificado</summary>
+
+```js
+let amt = 0; // valor de interpolación
+let increasing = true;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(220);
+
+  let v0 = createVector(80, 100); // origen común
+  let v1 = createVector(0, 200);  // vector azul (vertical)
+  let v2 = createVector(200, 0);  // vector rojo (horizontal)
+
+  // Interpolamos entre v1 y v2
+  let v3 = p5.Vector.lerp(v1, v2, amt);
+
+  // Color interpolado entre azul y rojo
+  let c = lerpColor(color(0, 0, 255), color(255, 0, 0), amt);
+
+  // Dibujamos las flechas desde el mismo origen
+  drawArrow(v0, v1, color(0, 0, 255));    // Azul
+  drawArrow(v0, v2, color(255, 0, 0));    // Rojo
+  
+  drawArrow(v0, v3, c);                   // Flecha interpolada con color cambiante
+  
+  // Flecha verde dibujada 
+  let origenRojo = p5.Vector.add(v0, v2);
+  let destinoAzul = p5.Vector.add(v0, v1);
+  let flechaVerde = p5.Vector.sub(destinoAzul, origenRojo);
+  drawArrow(origenRojo, flechaVerde, color(0, 160, 0));
+
+
+  // Actualizar `amt` para animar de ida y vuelta
+  if (increasing) {
+    amt += 0.01;
+    if (amt >= 1) increasing = false;
+  } else {
+    amt -= 0.01;
+    if (amt <= 0) increasing = true;
+  }
+}
+
+// Función para dibujar flechas desde un punto base con un vector
+function drawArrow(base, vec, myColor) {
+  push();
+  stroke(myColor);
+  strokeWeight(3);
+  fill(myColor);
+  translate(base.x, base.y);
+  line(0, 0, vec.x, vec.y);
+  rotate(vec.heading());
+  let arrowSize = 7;
+  translate(vec.mag() - arrowSize, 0);
+  triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+  pop();
+}
+
+```
+    
+</details>
+
+<img src="https://github.com/user-attachments/assets/6d231370-a46b-4392-9bae-667f9376a802" width="400">
+
+#### Bitácora Actividad 04 - Análisis de vectores y funciones en p5.js
+
+##### Modificaciones realizadas
+
+Se creó una visualización en la que se muestran tres vectores originados desde un mismo punto (`v0`):
+
+- **Vector azul (`v1`)**: vertical.
+- **Vector rojo (`v2`)**: horizontal.
+- **Vector interpolado (`v3`)**: generado a partir de la interpolación entre `v1` y `v2` usando `p5.Vector.lerp()`.
+
+Adicionalmente, se dibuja una **flecha verde** que representa el vector de diferencia desde la punta del vector rojo hasta la punta del vector azul. Esta flecha no parte del origen común, sino que parte de la punta del vector rojo (`v0 + v2`) y apunta hacia la punta del vector azul (`v0 + v1`).
+
+Se animó el valor `amt` de 0 a 1 y de regreso para mostrar cómo cambia gradualmente el vector interpolado y su color asociado.
+
+---
+
+#### ¿Cómo funciona `lerp()` y `lerpColor()`?
+
+#### `lerp()` en p5.js
+
+* **Significa "linear interpolation" (interpolación lineal).**
+
+* Su sintaxis general es:
+
+  ```javascript
+  let valorInterpolado = lerp(valorA, valorB, t);
+  ```
+
+* Donde:
+
+  * `valorA` es el punto de inicio,
+  * `valorB` es el punto final,
+  * `t` es un número entre `0` y `1` que determina **cuánto** nos movemos desde A hacia B.
+
+* Cuando `t = 0` → el resultado es `valorA`.
+
+* Cuando `t = 1` → el resultado es `valorB`.
+
+* Si `t = 0.5` → estamos justo a la mitad.
+
+#### `p5.Vector.lerp(v1, v2, t)`
+
+* Hace lo mismo, pero para **vectores**: genera un vector que se encuentra en algún punto entre `v1` y `v2`.
+
+
+- **`p5.Vector.lerp(v1, v2, amt)`**  
+  Realiza una interpolación lineal entre dos vectores `v1` y `v2`. El valor `amt` indica el porcentaje de interpolación:
+  - Si `amt = 0`, devuelve `v1`.
+  - Si `amt = 1`, devuelve `v2`.
+  - Si `amt = 0.5`, devuelve un punto a mitad de camino entre `v1` y `v2`.
+
+  Este método es útil para crear movimientos suaves o transiciones entre direcciones o posiciones.
+
+
+#### `lerpColor(colorA, colorB, t)`
+
+* Interpola entre dos colores, devolviendo un color intermedio.
+* Ejemplo:
+
+  ```javascript
+  lerpColor(color(0, 0, 255), color(255, 0, 0), 0.5);
+  // Da como resultado un color violeta (mezcla entre azul y rojo).
+  ```
+
+- **`lerpColor(c1, c2, amt)`**  
+  Interpola linealmente entre dos colores `c1` y `c2` usando el mismo principio que con los vectores. A medida que `amt` cambia, el color resultante va transicionando entre ambos.
+
+  En el código, esto se utiliza para cambiar dinámicamente el color del vector interpolado entre azul y rojo.
+
+---
+
+##### ¿Cómo se dibuja una flecha usando `drawArrow()`?
+
+La función `drawArrow(base, vec, myColor)` dibuja una flecha desde un punto base (`base`) en la dirección y magnitud de un vector (`vec`) con un color específico (`myColor`).
+
+1. Se traslada el sistema de coordenadas al punto base.
+2. Se dibuja una línea desde `(0, 0)` hasta `(vec.x, vec.y)`.
+3. Rota el sistema de coordenadas hacia la dirección del vector con `rotate(vec.heading())`
+4. Se dibuja un triángulo al final de la línea para simular la punta de la flecha.
+
+Esta implementación permite reutilizar la función para dibujar flechas de cualquier longitud, dirección y color, en cualquier posición del lienzo.
+
+
+</details>
+
+### Actividad 6
+
+<details>
+ <summary>Motion 101</summary>
+
+> **Comportamiento del ejemplo 1.7:**
+>
+> * Cada vez que se ejecuta `draw()`, el objeto se mueve automáticamente.
+> * Su dirección y velocidad inicial son aleatorias.
+> * Cuando el objeto sale de la pantalla, reaparece por el lado opuesto (comportamiento tipo *wrap-around*).
+> * Esto simula un movimiento continuo, suave y básico.
+
+
+#### ¿Cuál es el concepto del marco *Motion 101* y cómo se interpreta geométricamente?
+
+**Motion 101** es una forma simple pero poderosa de entender el movimiento en programación mediante el uso de vectores. La idea central es que un objeto en movimiento puede describirse por:
+
+* **Posición (`position`)**
+* **Velocidad (`velocity`)**
+* *(más adelante también se incluirá la aceleración)*
+
+En este marco, cada fotograma (frame) del programa actualiza la posición del objeto **sumándole la velocidad**. Es decir:
+
+```js
+position.add(velocity);
+```
+
+Esto se traduce en que:
+
+* La **posición** indica dónde está el objeto.
+* La **velocidad** indica hacia dónde se mueve y qué tan rápido lo hace.
+
+> 📐 **Geométricamente**, lo puedes imaginar así:
+> El vector de posición es una flecha desde el origen del sistema (0,0) hasta el objeto.
+> El vector de velocidad es otra flecha que indica la dirección y magnitud del cambio en posición.
+> En cada ciclo del programa, se dibuja una nueva posición siguiendo la dirección de la velocidad.
+
+---
+
+#### ¿Cómo se aplica *Motion 101* en el ejemplo?
+
+En el **ejemplo 1.7** del libro *The Nature of Code*, se aplica el marco **Motion 101** usando dos vectores principales: `position` y `velocity`.
+
+---
+
+####  ¿Qué significa aplicar Motion 101?
+
+Aplicar *Motion 101* significa que el movimiento del objeto se genera simplemente **sumando la velocidad a la posición en cada fotograma**. Esto es lo que hace que el objeto parezca moverse en la pantalla.
+
+En código, se ve así:
+
+```js
+this.position.add(this.velocity);
+```
+
+---
+
+####  ¿Cómo funciona en el ejemplo?
+
+1. **Al iniciar**, el objeto (`mover`) recibe una posición y una velocidad aleatoria.
+
+   ```js
+   this.position = createVector(random(width), random(height));
+   this.velocity = createVector(random(-2, 2), random(-2, 2));
+   ```
+
+2. **En cada fotograma**, se ejecuta el método `update()`:
+
+   ```js
+   this.position.add(this.velocity);
+   ```
+
+   Esto hace que el objeto se mueva automáticamente por la pantalla, siguiendo su velocidad.
+
+3. **Luego se dibuja** con `show()`, y se controla que no se salga de los bordes con `checkEdges()`.
+
+
+#### mover.js
+
+```js
+class Mover {
+  constructor() {
+    // Posición y velocidad aleatorias al iniciar
+    this.position = createVector(random(width), random(height));
+    this.velocity = createVector(random(-2, 2), random(-2, 2));
+  }
+
+  update() {
+    // Movimiento: nueva posición = posición + velocidad
+    this.position.add(this.velocity);
+  }
+
+  show() {
+    // Dibujar el objeto como un círculo
+    stroke(0);
+    strokeWeight(2);
+    fill(127);
+    circle(this.position.x, this.position.y, 48);
+  }
+
+  checkEdges() {
+    // Rebote por los bordes: aparece en el lado opuesto
+    if (this.position.x > width) {
+      this.position.x = 0;
+    } else if (this.position.x < 0) {
+      this.position.x = width;
+    }
+
+    if (this.position.y > height) {
+      this.position.y = 0;
+    } else if (this.position.y < 0) {
+      this.position.y = height;
+    }
+  }
+}
+```
+
+#### sketch.js
+
+```js
+let mover;
+
+function setup() {
+  createCanvas(640, 240);
+  mover = new Mover(); // Crear instancia del objeto
+}
+
+function draw() {
+  background(255);
+
+  mover.update();      // Actualiza posición
+  mover.checkEdges();  // Controla los bordes
+  mover.show();        // Dibuja el círculo
+}
+```
+
+[Link al ejemplo 1.7. motion 101](https://editor.p5js.org/natureofcode/sketches/6foX0NUfS)
+
+ 
+</details>
+
+
+###  Actividad 7
+
+#### Experimento con la aceleracion
+
+Perfecto, trabajémoslo parte por parte con explicaciones claras y progresivas. Empecemos con el objetivo de la **Actividad 07** y el significado de la frase clave del libro:
+
+---
+
+## Actividad 07: Experimentando con la aceleración
+
+### Frase del libro:
+
+> “The goal for programming motion is to come up with an algorithm for calculating acceleration and then let the trickle-down effect work its magic.”
+
+### ¿Qué significa?
+
+Esta frase plantea un principio fundamental del movimiento con vectores:
+en lugar de manipular directamente la posición o la velocidad de un objeto, **se diseña una regla (algoritmo) para calcular su aceleración**. A partir de esa aceleración, **el resto del movimiento sucede de forma natural** por el efecto acumulativo:
+
+* La **aceleración** afecta a la **velocidad**
+* La **velocidad** afecta a la **posición**
+
+Este efecto en cadena es lo que el autor llama “trickle-down effect”.
+
+---
+
+Ahora vamos a construir el experimento en tres partes. En cada una probaremos un tipo diferente de aceleración y luego haremos observaciones específicas. Comenzamos con el primer tipo.
+
+---
+
+### Parte 1: Aceleración constante
+
+<img src="https://github.com/user-attachments/assets/27bdba57-11e5-4db8-bed3-1e58123aa8d3" width="400">
+
+[link al p5](https://editor.p5js.org/DanielZafiro/sketches/NqfJtHyLS)
+
+#### Código base
+
+```js
+let mover;
+
+function setup() {
+  createCanvas(640, 360);
+  mover = new Mover();
+}
+
+function draw() {
+  background(255);
+  mover.update();
+  mover.edges();
+  mover.show();
+}
+
+class Mover {
+  constructor() {
+    this.position = createVector(width / 2, height / 2);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+  }
+
+  update() {
+    // Aceleración constante hacia la derecha
+    this.acceleration.set(0.05, 0);
+
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+  }
+
+  edges() {
+    if (this.position.x > width || this.position.x < 0) {
+      this.velocity.x *= -1;
+    }
+    if (this.position.y > height || this.position.y < 0) {
+      this.velocity.y *= -1;
+    }
+  }
+
+  show() {
+    fill(127);
+    stroke(0);
+    ellipse(this.position.x, this.position.y, 32);
+  }
+}
+```
+
+#### Observaciones
+
+* La aceleración constante provoca un **aumento progresivo de la velocidad**.
+* El objeto **se mueve cada vez más rápido** en la dirección de la aceleración.
+* Como no hay fricción ni límites de velocidad, la velocidad **se acumula indefinidamente**.
+* La trayectoria es **lineal**, porque no hay cambios de dirección.
+* La aceleración actúa como un empuje constante, como si una fuerza invisible estuviera tirando del objeto sin parar.
+
+---
 
 
 
