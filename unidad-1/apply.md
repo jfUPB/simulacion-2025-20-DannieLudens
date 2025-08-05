@@ -29,6 +29,7 @@ Ahora que has experimentado con la aleatoriedad y has aplicado estos conceptos e
 > 4. Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
 
 
+
 <img src="https://github.com/user-attachments/assets/7e23ceba-cf53-4740-b2fd-e04366bbe522" width="400">
 
 
@@ -41,6 +42,7 @@ Inspiracion basada en el comportamiento de los cardumen de peces cuando se estan
 <details>
   <summary>Concepto obra generativa Pecera</summary>
 
+
    Verificacion de cumplimiento de requisitos, almenos 3 conceptos estudiados combinados:
    
 - [x] Aleatoriedad
@@ -51,6 +53,8 @@ Inspiracion basada en el comportamiento de los cardumen de peces cuando se estan
 - [x] Coherencia y creatividad
 - [x] Interactiva y generativa en tiempo real
 - [x] Elemento fisico interactivo (mouse o teclado)
+
+
 
 
 3. Codigo del programa
@@ -77,6 +81,7 @@ Inspiracion basada en el comportamiento de los cardumen de peces cuando se estan
   <summary>sketch.js</summary>
 
 ```js
+
 let peces = [];  
 let comidas = [];
 let numPeces = 40; 
@@ -289,3 +294,4 @@ class Comida {
 
 
 </details>
+
