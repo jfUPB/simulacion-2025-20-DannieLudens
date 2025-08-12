@@ -9,7 +9,7 @@
 
 #### 1. Escribe la “receta” del marco MOTION 101.
 
-Basicamente es una combiancion o suma de vectores. Con una posición inicial le empiezo a sumar velocidad para que se mueva luego actualizo la posicion en cada frame y la velocidad cambia por la aceleración que le ponga
+Basicamente es una combiancion o suma de vectores. Con una posición inicial le empiezo a sumar velocidad para que se mueva luego actualizo la posicion en cada frame y la velocidad que indica la direcci[on cambia por la aceleración que le ponga
 
 #### 2. ¿Cómo se relaciona el marco MOTION 101 con los conceptos de position, velocidad y aceleración?
 
@@ -90,4 +90,5 @@ Me pareció una transición muy necesaria para poder entender y aplicar lo que q
 ### Comentario adicional: ¿Algo más que quieras compartir sobre tu experiencia en esta unidad?
 
 Me gustaria que hubiesen sesiones donde se mostraran los sketchs de Applys de compañeas y compañeros ya que son fuente de inspiración
+
 
