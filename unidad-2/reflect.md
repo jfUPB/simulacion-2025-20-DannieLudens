@@ -41,7 +41,7 @@ Mejoraría el comportamiento grupal para que las luciérnagas mantuvieran cierta
 
 ### Intercambia la URL de tu bitácora con un compañero.
 
-Intercambié (URL de bitacora)[https://github.com/jfUPB/simulacion-2025-20-Nilexpat/blob/unidad2/apply/unidad-2/apply.md] con Parra 
+Intercambié [URL de bitacora](https://github.com/jfUPB/simulacion-2025-20-Nilexpat/blob/unidad2/apply/unidad-2/apply.md) con Parra 
 
 ### Analiza su Actividad 08. Ejecuta su sketch, lee su concepto y revisa su código.
 
@@ -90,3 +90,4 @@ Me pareció una transición muy necesaria para poder entender y aplicar lo que q
 ### Comentario adicional: ¿Algo más que quieras compartir sobre tu experiencia en esta unidad?
 
 Me gustaria que hubiesen sesiones donde se mostraran los sketchs de Applys de compañeas y compañeros ya que son fuente de inspiración
+
