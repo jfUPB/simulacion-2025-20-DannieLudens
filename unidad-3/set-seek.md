@@ -19,3 +19,140 @@ Sus obras combinan elementos visuales simples con un diseño preciso que permite
 
 </details>
 
+<details>
+  <summary>Actividad 02 – Inspiración, reflexion y exploracion</summary>
+
+## Actividad 02 – Inspiración, reflexion y exploracion
+
+Exploré el proyecto Data Structure del estudio de diseño SOSO, el cual demuestra cómo las experiencias digitales pueden integrarse en el mundo físico mediante instalaciones interactivas.
+
+Me imaginé instalaciones como las que aprendemos en la materia de mecanismos y prototipado donde las esculturas cinéticas pueden ser manipuladas por experiencias digitales, donde el color y el movimiento se modifican en tiempo real según datos o interacciones del usuario.
+
+tambíen llegó recordé un juego de Mario kart que controla un kart fisico con una aplicacion y la sala de la casa se convierte en el circuito de carreras mientras se maneja de manera digital manifestandose en el mundo fisico
+
+Recordé que la interacción como hemos estado acostumbrados a verla ha sido siempre de algo analogico hacia algo digital(como un teclado a un computador), y aunque en muchos casos la interacción puede ser bilateral(escanear, editar e imprimir), pensar en que desde lo digital se puede manipular elementos fisicos para dar vida a esas obras expresivas, amplia el panorama de las posibilidades y combinacion de disciplinas.
+
+<img width="450" height="450" alt="image" src="https://github.com/user-attachments/assets/246b8901-b151-40b0-a951-89bd616842c2" />
+
+<img width="236" height="419" alt="image" src="https://github.com/user-attachments/assets/9acd1ca6-449c-4134-8b1c-b017593de886" />
+
+
+
+</details>
+
+<details>
+  <summary>Actividad 03 – Capítulo 2 de The Nature of Code, fuerzas y cómo aplicarlas</summary>
+
+## Actividad 03 – Capítulo 2 de The Nature of Code, fuerzas y cómo aplicarlas
+
+En esta fase trabajaremos el [Capítulo 2 de The Nature of Code](https://natureofcode.com/forces/), que corresponde a la Unidad 2 del curso. Este capítulo se enfoca en las fuerzas y en cómo aplicarlas dentro de simulaciones, basándose en las leyes de Newton.
+
+Aquí profundizaremos en cómo modelar fuerzas como la gravedad, la fricción o el arrastre, y cómo estas afectan a los objetos en movimiento. El objetivo es entender cómo traducir las ecuaciones y principios físicos a código para crear comportamientos más realistas en nuestras simulaciones interactivas.
+
+</details>
+
+<details>
+  <summary>Actividad 04 – Marco Motion 101</summary>
+
+## Actividad 04 – Marco Motion 101
+
+El marco Motion 101 es como la “receta básica” para mover un objeto en una simulación. Se basa en tres pasos:
+
+1. **Calcular aceleración** → Aquí definimos cómo y hacia dónde se va a mover el objeto (puede ser constante, aleatoria, hacia el mouse, etc.).
+
+2. **Actualizar velocidad** → Sumamos la aceleración a la velocidad actual, y limitamos la velocidad máxima para que no se dispare.
+
+3. **Actualizar posición** → Sumamos la velocidad a la posición, lo que realmente hace que el objeto se desplace en pantalla.
+
+En el código, esto se ve en el método `update()` este ciclo se repite en cada frame, creando un movimiento fluido que responde a la lógica de aceleración que hayamos definido:
+
+<details>
+  <summary>codigo</summary>
+
+```js
+let mover;
+
+function setup() {
+    createCanvas(640, 240);
+    mover = new Mover();
+}
+
+function draw() {
+    background(255);
+    mover.show();
+    mover.update();
+    mover.checkEdges();
+}
+
+.
+.
+.
+
+update() {
+
+    // Aquí calculo la aceleración
+    .
+    .
+    .
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.topSpeed);
+    this.position.add(this.velocity);
+}
+.
+.
+.
+```
+</details>
+
+`this.velocity.add(this.acceleration)`; → La velocidad aumenta según la aceleración.
+
+`this.velocity.limit(this.topSpeed)`; → Evitamos que la velocidad supere un máximo.
+
+`this.position.add(this.velocity)`; → Movemos el objeto sumando la velocidad a la posición actual.
+
+</details>
+
+<details>
+  <summary>Actividad 05 – titulo</summary>
+
+## Actividad 05 – titulo
+
+texto
+
+</details>
+
+<details>
+  <summary>Actividad 06 – titulo</summary>
+
+## Actividad 06 – titulo
+
+texto
+
+</details>
+
+<details>
+  <summary>Actividad 07 – titulo</summary>
+
+## Actividad 07 – titulo
+
+texto
+
+</details>
+
+<details>
+  <summary>Actividad 08 – titulo</summary>
+
+## Actividad 08 – titulo
+
+texto
+
+</details>
+
+<details>
+  <summary>Actividad 09 – titulo</summary>
+
+## Actividad 09 – titulo
+
+texto
+
+</details>
