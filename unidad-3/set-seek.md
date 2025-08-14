@@ -257,20 +257,104 @@ ejemplo de lo que pasaria si no resetearamos la fuerza:
 </details>
 
 <details>
-  <summary>Actividad 07 – titulo</summary>
+  <summary>Actividad 07 – En mi mundo los pixeles si tienen masa</summary>
 
-## Actividad 07 – titulo
+## Actividad 07 – En mi mundo los pixeles si tienen masa
 
-texto
+Lo que tenemos 
+
+```js
+applyForce(force) {
+    // Asume que la masa es 10
+    force.div(10);
+    this.acceleration.add(force);
+}
+```
+y llamamos 
+
+```js
+mover.applyForce(wind);
+mover.applyForce(gravity);
+```
+
+### Detectamos el "problema" 
+
+`wind` y `gravity` son objetos `p5.Vector` y **en JavaScript, los objetos se pasan por referencia, no por valor.** Esto significa que si modificamos `force` dentro de `applyForce`, estamos modificando el vector original que se pasó.
+
+#### ¿Qué pasa aquí?
+
+`force.div(10)` divide el vector original por 10.
+
+Entonces, si pasaste `wind` y luego quieres usar `wind` otra vez en otro lado, ya no tiene los valores originales, sino que fue alterado.
+
+Esto es un efecto no deseado cuando aplicas varias fuerzas en frames consecutivos o cuando reutilizas vectores.
+
+#### Como arreglarlo
+
+La solución es no modificar el vector original, sino trabajar con una copia En p5.js usamos `.copy()`
+
+crear una copia de la fuerza antes de dividir por la masa y sumarla a la aceleración
+
+```js
+applyForce(force) {
+    let f = force.copy();  // Crea una copia para no alterar el original
+    f.div(this.mass);      // ahora sí dividimos la copia
+    this.acceleration.add(f);
+}
+```
+
+Ahora `wind` y `gravity` no se alteran y podemos aplicarlas tantas veces como queramos sin efectos colaterales
+
+
 
 </details>
 
 <details>
-  <summary>Actividad 08 – titulo</summary>
+  <summary>Actividad 08 – Paso por valor y paso por referencia
+</summary>
 
-## Actividad 08 – titulo
+## Actividad 08 – Paso por valor y paso por referencia
 
-texto
+### Concepto clave: VALOR vs REFERENCIA
+
+Cuando por valor y cuando por referencia
+
+| Concepto       | Qué significa                             | Ejemplo en p5.Vector   |
+| -------------- | ----------------------------------------- | ---------------------- |
+| **Valor**      | Se crea un nuevo objeto, independiente    | `this.velocity.copy()` |
+| **Referencia** | Se trabaja sobre el mismo objeto original | `this.velocity`        |
+
+* **Paso por valor** → seguro para cálculos temporales, no altera el original.
+* **Paso por referencia** → útil para manipular el objeto real, pero puede causar errores si no se controla.
+
+```js
+let friction = this.velocity.copy();
+let friction = this.velocity;
+```
+
+### Diferencia entre paso por valor y paso por referencia
+
+1. `let friction = this.velocity.copy();`
+
+- Se crea una copia independiente del vector `this.velocity`
+
+- Cambiar `friction` no afecta a `this.velocity`
+
+- Esto es **paso por valor**, porque estamos trabajando con un nuevo objeto que contiene los mismos datos.
+
+2. `let friction = this.velocity;`
+
+- `friction` apunta al mismo objeto que `this.velocity`
+
+- Cambiar `friction` también cambia `this.velocity`
+
+- Esto es **paso por referencia**, porque ambos nombres referencian el mismo objeto en memoria.
+
+### Qué podría salir mal con `let friction = this.velocity;`
+
+* Si modificamos `friction` (por ejemplo `friction.mult(0.9)` para simular fricción), también se **modifica `this.velocity`**, lo que puede generar **efectos inesperados** en el movimiento del objeto.
+* Esto rompe la lógica física, porque la fricción debería afectar solo la aceleración o la fuerza aplicada, no alterar directamente el vector de velocidad original antes de sumarlo a la posición.
+
 
 </details>
 
@@ -279,8 +363,14 @@ texto
 
 ## Actividad 09 – titulo
 
-texto
+[sketch laberinto ObraGen](https://editor.p5js.org/DanielZafiro/sketches/FxUcm0TBH)
+
+[sketch pecera objetos que caen con diferentes masas]()
+
+[sketch jupiter]()
 
 </details>
+
+
 
 
