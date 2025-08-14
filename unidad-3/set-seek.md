@@ -359,9 +359,10 @@ let friction = this.velocity;
 </details>
 
 <details>
-  <summary>Actividad 09 – titulo</summary>
+  <summary>Actividad 09 – Modelando fuerzas</summary>
 
-## Actividad 09 – titulo
+## Actividad 09 – Modelando fuerzas
+
 
 [sketch laberinto ObraGen](https://editor.p5js.org/DanielZafiro/sketches/FxUcm0TBH)
 
@@ -370,6 +371,7 @@ let friction = this.velocity;
 [sketch jupiter]()
 
 </details>
+
 
 
 
