@@ -113,11 +113,102 @@ update() {
 </details>
 
 <details>
-  <summary>Actividad 05 – titulo</summary>
+  <summary>Actividad 05 – Leyes de Newton y arte generativo</summary>
 
-## Actividad 05 – titulo
+## Actividad 05 – Leyes de Newton y arte generativo
 
-texto
+### Problema que veo en el planteamiento:
+
+
+Si en el método `applyForce()` simplemente hacemos
+
+```js
+applyForce(force) {
+  this.acceleration = force;
+}
+```
+estamos sobrescribiendo la aceleración con cada fuerza nuevaen lugar de sumarla. Esto hace que solo la última fuerza aplicada en ese frame tenga efecto, ignorando todas las anteriores (ej: Si aplicamos primero el viento y luego la gravedad, la gravedad reemplaza al viento, y el objeto solo "recuerda" la última fuerza aplicada)
+
+### Solución propuesta
+
+La solución es sumar todas las fuerzas en cada frame y al final del `update()`, reiniciar la aceleración para evitar acumulación infinita de fuerzas
+
+En lugar de reemplazar, debemos acumular todas las fuerzas que actúan en el frame actual:
+
+```js
+applyForce(force) {
+  // Sumamos la fuerza a la aceleración actual
+  this.acceleration.add(force);
+}
+```
+
+Después, en `update()`:
+
+1. Usamos la aceleración acumulada para actualizar la velocidad y la posición
+
+2. Reiniciamos la aceleración a (0,0) para el siguiente frame, ya que en el nuevo frame las fuerzas pueden ser distintas
+
+<details>
+  <summary>asi seria la implementacion en p5js (Click aqui)</summary>
+
+```js
+class Mover {
+  constructor() {
+    this.position = createVector(width / 2, height / 2); // Posición inicial
+    this.velocity = createVector(0, 0); // Velocidad inicial
+    this.acceleration = createVector(0, 0); // Aceleración inicial
+    this.mass = 1; // Masa (puede cambiarse si se quiere más realismo por el momento dejemosla en masa 1)
+  }
+
+  // Método para aplicar una fuerza
+  applyForce(force) {
+    // Aceleración = Fuerza / masa
+    let f = p5.Vector.div(force, this.mass);
+    this.acceleration.add(f);
+  }
+
+  // Actualizar movimiento
+  update() {
+    this.velocity.add(this.acceleration); // Sumar aceleración a la velocidad
+    this.position.add(this.velocity);     // Sumar velocidad a la posición
+    this.acceleration.mult(0);            // Reiniciar aceleración para el siguiente frame
+  }
+
+  // Mostrar el objeto
+  show() {
+    stroke(0);
+    fill(175);
+    ellipse(this.position.x, this.position.y, 20, 20);
+  }
+}
+
+let mover;
+
+function setup() {
+  createCanvas(640, 360);
+  mover = new Mover();
+}
+
+function draw() {
+  background(255);
+
+  let wind = createVector(0.1, 0); // Fuerza hacia la derecha
+  let gravity = createVector(0, 0.2); // Fuerza hacia abajo
+
+  mover.applyForce(wind);
+  mover.applyForce(gravity);
+
+  mover.update();
+  mover.show();
+}
+
+```
+</details>
+
+[Link a sketch p5js](https://editor.p5js.org/DanielZafiro/sketches/My9QaTRty)
+
+
+<img src="https://github.com/user-attachments/assets/a4a2d360-6062-4a5b-93aa-247c03bb8b76" width="400">
 
 </details>
 
@@ -156,3 +247,4 @@ texto
 texto
 
 </details>
+
