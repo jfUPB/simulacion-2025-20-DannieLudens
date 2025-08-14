@@ -213,11 +213,46 @@ function draw() {
 </details>
 
 <details>
-  <summary>Actividad 06 – titulo</summary>
+  <summary>Actividad 06 – La fuerza neta debe ser acumulativa</summary>
 
-## Actividad 06 – titulo
+## Actividad 06 – La fuerza neta debe ser acumulativa
 
-texto
+En esta parte la lógica es clave para que el sistema de fuerzas funcione como en el mundo real
+
+### 1. ¿Por qué es necesario multiplicar la aceleración por cero en cada frame?
+
+Porque la aceleración no es una propiedad permanente del objeto, sino el resultado de las fuerzas que actúan solamente en ese instante
+
+Si no la reiniciamos, la aceleración acumulada del frame anterior seguiría sumándose en el siguiente, y el objeto se movería como si las fuerzas fueran permanentes aunque ya no existieran. Esto haría que el objeto pareciera “acelerarse solo” incluso cuando ya no le aplicamos fuerzas
+
+<img width="136" height="78" alt="image" src="https://github.com/user-attachments/assets/697c38a0-a0ba-4ff1-a89d-cfb24b86b59b" />
+
+La suma de fuerzas se recalcula cada instante. Si en el próximo instante no hay fuerzas, la aceleración debería ser cero
+
+### 2. ¿Por qué se multiplica por cero justo al final de update()?
+
+Porque `update()` es el paso donde usamos la aceleración acumulada para cambiar la velocidad y posición.
+
+1. Primero: aplicamos todas las fuerzas con `applyForce()` → se suman en `this.acceleration`
+
+2. Luego: en `update()` esa aceleración se usa para modificar la velocidad
+
+3. Por último: la aceleración se reinicia (`mult(0)`) para que en el siguiente frame empiece limpio, listo para calcular nuevas fuerzas
+
+> [!TIP]
+> Analogía:
+> Imaginar que cada frame es como un empujón en una patineta:
+> 
+> - Durante un frame, se acumula todos los empujones que recibo.
+> - Al final, se usa esa fuerza acumulada para moverme.
+> - Luego reseteo la fuerza a cero para esperar nuevos empujones en el siguiente momento.
+
+ejemplo de lo que pasaria si no resetearamos la fuerza:
+
+[link a sketch](https://editor.p5js.org/DanielZafiro/sketches/sahf6mdm3)
+
+<img src="https://github.com/user-attachments/assets/d5b5c5ee-6222-4620-b56d-680a55a75833" width="600">
+
 
 </details>
 
@@ -247,4 +282,5 @@ texto
 texto
 
 </details>
+
 
