@@ -363,14 +363,335 @@ let friction = this.velocity;
 
 ## Actividad 09 – Modelando fuerzas
 
+### 🌌 Fricción
+
+
+<img src="https://github.com/user-attachments/assets/c4b0256e-99d4-4290-93bd-b468e4efd6b3" width="400">
+
+
+**Concepto obra interactiva**
+
+Un círculo se mueve por la pantalla con una velocidad inicial y poco a poco se va deteniendo debido a la fricción. El usuario puede **arrastrar con el mouse** sobre el círculo para empujarlo en distintas direcciones, pero siempre se observa cómo la fricción reduce su movimiento con el tiempo.
+
+**Cómo modelé la fuerza**
+
+La fricción se modeló como un **vector opuesto a la velocidad**:
+
+1. Se copió la velocidad (`this.velocity.copy()`)
+2. Se invirtió su dirección (`mult(-1)`)
+3. Se normalizó para dejar solo la dirección
+4. Se multiplicó por un **coeficiente de fricción** ($\mu$)
+5. Finalmente, se aplicó como fuerza con `applyForce(friction)`
+
+<img width="139" height="40" alt="image" src="https://github.com/user-attachments/assets/77e3b2a1-bd6b-4622-8a9a-68560c84e458" />
+
+donde 𝑣^ es el vector velocidad normalizado.
+
+**Relación conceptual con la obra generativa**
+
+La fricción le da al movimiento un **comportamiento natural**, ya que ningún objeto en el mundo real se mueve indefinidamente sin que algo lo frene. La obra permite experimentar cómo el círculo pierde velocidad hasta detenerse, y cómo al arrastrarlo con el mouse siempre termina cediendo ante la fricción.
+
+<details>
+  <summary>sketch.js</summary>
+
+```js
+let mover;
+
+function setup() {
+  createCanvas(640, 360);
+  mover = new Mover();
+}
+
+function draw() {
+  background(255);
+
+  mover.applyFriction(0.1); // aplicamos fricción
+  mover.update();
+  mover.show();
+  
+  fill(50);
+  textSize(20);
+  text(`Arrastra el circulo`, 10, 30);
+  
+}
+
+
+function mouseDragged() {
+  let force = createVector(mouseX - pmouseX, mouseY - pmouseY);
+  force.setMag(0.14);
+  mover.applyForce(force);
+}
+
+class Mover {
+  constructor() {
+    this.position = createVector(width/2, height/2);
+    this.velocity = createVector(random(-5,5), random(-5,5));
+    this.acceleration = createVector(0,0);
+    this.mass = 1;
+  }
+
+  applyForce(force) {
+    let f = force.copy().div(this.mass);
+    this.acceleration.add(f);
+  }
+
+  applyFriction(mu) {
+    let friction = this.velocity.copy(); // paso por valor (copia) para no alterar la velocidad original
+    friction.mult(-1);                    // dirección contraria al movimiento
+    friction.normalize();                 // solo queremos la dirección
+    friction.mult(mu);                    // aplicamos el coeficiente de fricción
+    this.applyForce(friction);            // sumamos como fuerza
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  show() {
+    fill(175);
+    ellipse(this.position.x, this.position.y, 20, 20);
+  }
+}
+```
+</details>
 
 [sketch laberinto ObraGen](https://editor.p5js.org/DanielZafiro/sketches/FxUcm0TBH)
 
-[sketch pecera objetos que caen con diferentes masas]()
 
-[sketch jupiter]()
+### 🌌 Resistencia del aire y fluidos
+
+<img src="https://github.com/user-attachments/assets/67e78b0c-d0ad-46eb-916d-adc54fde0731" width="400">
+
+**Idea de la obra**
+
+En esta obra generativa interactiva los objetos (círculos) caen bajo el efecto de la gravedad, pero al mismo tiempo enfrentan una fuerza de resistencia que depende de su velocidad y de su masa. El usuario puede hacer clic en la pantalla para reiniciar la simulación y generar tres nuevos círculos con masas aleatorias, lo que hace que cada ejecución sea diferente
+
+**Cómo modelé la fuerza**
+
+La resistencia del aire o fluido se modela con la siguiente fórmula
+
+<img width="150" height="46" alt="image" src="https://github.com/user-attachments/assets/91fc0d56-f992-48d5-b247-7e2795be3308" />
+
+Donde:
+
+𝑐 es el coeficiente de resistencia del fluido.
+
+𝑣 es la magnitud de la velocidad.
+
+𝑣^ es la dirección de la velocidad normalizada.
+
+El signo negativo indica que la fuerza siempre se opone al movimiento.
+
+
+* La fuerza siempre va en dirección contraria al movimiento.
+* Es proporcional al cuadrado de la velocidad del objeto.
+* Multiplico el vector velocidad por $-1$, lo normalizo y luego lo escalo según la magnitud de la velocidad al cuadrado y un coeficiente $c$ que representa la densidad del fluido.
+* Finalmente aplico esa fuerza al objeto usando su masa.
+
+**Relación conceptual con la obra**
+
+El concepto de **resistencia de fluidos** se traduce aquí en la sensación de que los círculos caen con diferentes masa y por ende su velocidad. Los más ligeros se frenan más rápido, mientras que los más pesados atraviesan con más fuerza el "aire". Esto genera una diversidad de trayectorias como en fenómenos naturales como hojas cayendo, burbujas moviéndose en el agua o gotas de lluvia, etc.
+
+<details>
+  <summary>sketch.js</summary>
+  
+```js
+let movers = [];
+
+function setup() {
+  createCanvas(640, 360);
+  resetMovers();
+}
+
+function draw() {
+  background(255);
+
+  for (let mover of movers) {
+    // fuerza de gravedad proporcional a la masa
+    let gravity = createVector(0, 0.2 * mover.mass);
+    mover.applyForce(gravity);
+
+    // resistencia del fluido
+    mover.applyDrag(0.05);
+
+    mover.update();
+    mover.show();
+    mover.edges();
+  }
+}
+
+// cada click reinicia con 3 círculos de masa random
+function mousePressed() {
+  resetMovers();
+}
+
+function resetMovers() {
+  movers = [];
+  for (let i = 0; i < 3; i++) {
+    movers.push(new Mover(random(0.5, 4), random(width), 0));
+  }
+}
+
+class Mover {
+  constructor(mass, x, y) {
+    this.mass = mass;
+    this.position = createVector(x, y);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+  }
+
+  applyForce(force) {
+    let f = force.copy().div(this.mass);
+    this.acceleration.add(f);
+  }
+
+  applyDrag(c) {
+    let drag = this.velocity.copy();
+    drag.mult(-1);
+    let speedSq = this.velocity.magSq();
+    drag.normalize();
+    drag.mult(c * speedSq);
+    this.applyForce(drag);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  show() {
+    stroke(0);
+    fill(175, 150);
+    ellipse(this.position.x, this.position.y, this.mass * 16, this.mass * 16);
+  }
+
+  edges() {
+    if (this.position.y > height - this.mass * 8) {
+      this.position.y = height - this.mass * 8;
+      this.velocity.y *= -0.5;
+    }
+  }
+}
+```
+</details>
+
+[sketch pecera objetos que caen con diferentes masas](https://editor.p5js.org/DanielZafiro/sketches/7KyprfAVg)
+
+### 🌌 Atraccion gravitacional
+
+<img src="https://github.com/user-attachments/assets/9bc5e538-dd47-48e2-98ae-ddf550e344aa" width="400">
+
+* **Modelado matemático:**
+
+  Se basa en la Ley de Gravitación Universal de Newton:
+
+  <img width="120" height="54" alt="image" src="https://github.com/user-attachments/assets/229a8d23-a482-4268-9ceb-75b387d97637" />
+
+
+  donde $G$ es una constante gravitacional (que escalamos a un valor útil para la simulación), $m_1$ y $m_2$ son las masas de los cuerpos y $d$ es la distancia entre ellos.
+  La dirección de la fuerza es desde el objeto hacia el planeta.
+
+**Relación con la obra:**
+
+  * El círculo central representa a **Júpiter**, un planeta inmenso.
+  * Los cuerpos pequeños son asteroides o satélites que al hacer clic aparecen en diferentes posiciones y masas.
+  * Se mueven afectados únicamente por la gravedad central, produciendo trayectorias curvas y a veces órbitas.
+  * Es interactiva porque con **cada clic** se generan nuevos cuerpos que son atraídos por Júpiter.
+
+
+<details>
+  <summary>sketch.js</summary>
+  
+```js
+let jupiter;
+let movers = [];
+
+function setup() {
+  createCanvas(640, 360);
+  jupiter = new Mover(width/2, height/2, 20, true); // planeta grande en el centro
+}
+
+function draw() {
+  background(0);
+
+  // Dibujar planeta
+  jupiter.show(color(255, 204, 0));
+
+  // Actualizar y mostrar los asteroides
+  for (let mover of movers) {
+    let force = jupiter.attract(mover); // fuerza gravitacional
+    mover.applyForce(force);
+    mover.update();
+    mover.show(color(175));
+  }
+
+  fill(255);
+  textSize(16);
+  text("Click para lanzar asteroides atraídos por Júpiter", 10, 20);
+}
+
+function mousePressed() {
+  // Crear 1 nuevo asteroides en posiciones random
+  for (let i = 0; i < 1; i++) {
+    let x = random(width);
+    let y = random(height);
+    let mass = random(2, 8); // masas variadas
+    movers.push(new Mover(x, y, mass, false));
+  }
+}
+
+class Mover {
+  constructor(x, y, m, isFixed) {
+    this.position = createVector(x, y);
+    this.velocity = p5.Vector.random2D().mult(random(1, 3));
+    this.acceleration = createVector(0, 0);
+    this.mass = m;
+    this.isFixed = isFixed; // si es Júpiter no se mueve
+  }
+
+  applyForce(force) {
+    if (!this.isFixed) {
+      let f = force.copy().div(this.mass);
+      this.acceleration.add(f);
+    }
+  }
+
+  update() {
+    if (!this.isFixed) {
+      this.velocity.add(this.acceleration);
+      this.position.add(this.velocity);
+      this.acceleration.mult(0);
+    }
+  }
+
+  attract(mover) {
+    let force = p5.Vector.sub(this.position, mover.position); // dirección
+    let distance = constrain(force.mag(), 5, 25); // evitar división por cero
+    force.normalize();
+    let G = 1;
+    let strength = (G * this.mass * mover.mass) / (distance * distance);
+    force.mult(strength);
+    return force;
+  }
+
+  show(c) {
+    noStroke();
+    fill(c);
+    ellipse(this.position.x, this.position.y, this.mass * 4);
+  }
+}
+```
+</details>
+
+[sketch jupiter](https://editor.p5js.org/DanielZafiro/sketches/I1sG-tunu)
 
 </details>
+
+
+
 
 
 
