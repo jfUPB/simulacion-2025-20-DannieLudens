@@ -37,7 +37,7 @@ Referente:
 
 ### ¿Cómo resolviste la interacción?
 > Tu respuesta aquí:
-> frame difference y captura de video, si hay movimiento el volumen de la musica se sube y si no hay movimiento se baja a 0 cancion Innerbloom
+> frame difference y captura de video, si hay movimiento el volumen de la musica se sube y si no hay movimiento se baja a 0 cancion Innerbloom o Dead Disco Dancer con el concepto de que la musica muerte
 
 ### Enlace a la obra en el editor de p5.js
 
@@ -50,6 +50,7 @@ Referente:
 ```
 
 ### Captura de pantalla representativa
+
 
 
 
