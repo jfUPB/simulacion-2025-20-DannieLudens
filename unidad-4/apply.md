@@ -1,6 +1,7 @@
-# Evidencias de la unidad 4
+# Unidad 4
 
-## Apply 
+
+## 🛠 Fase: Apply
 
 **Obra de arte generativa algorítmica interactiva en tiempo real**
 
@@ -43,6 +44,7 @@ Diseña e implementa una obra de arte generativa algorítmica interactiva en tie
 ```
 
 ### Captura de pantalla representativa
+
 
 
 
