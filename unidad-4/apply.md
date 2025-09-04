@@ -1,6 +1,5 @@
 # Unidad 4
 
-
 ## 🛠 Fase: Apply
 
 **Obra de arte generativa algorítmica interactiva en tiempo real**
@@ -12,6 +11,13 @@ Diseña e implementa una obra de arte generativa algorítmica interactiva en tie
 - La obra debe ser interactiva en tiempo real. Puedes usar teclado, mouse, música, el micrófono, video, sensor o cualquier otro dispositivo de entrada.
 
 ### Explicación conceptual de la obra
+
+Referente:
+
+[SuperRadiance](https://superradiance.art/)
+
+<img width="760" height="435" alt="Arc_Mv1CZei7Oh" src="https://github.com/user-attachments/assets/bc28cc6c-2c36-4991-8f67-02aad9191c62" />
+
 
 * ¿Qué concepto de la unidad 4 y cómo lo aplicaste en la obra?
 > Tu respuesta aquí:
@@ -27,11 +33,11 @@ Diseña e implementa una obra de arte generativa algorítmica interactiva en tie
 
 * ¿Qué concepto de la unidad 1 y cómo lo aplicaste en la obra?
 > Tu respuesta aquí:
-> Flight Levy ...
+> Perlin noise ...
 
 ### ¿Cómo resolviste la interacción?
 > Tu respuesta aquí:
-> frame difference y captura de video, si hay movimiento el volumen de la musica se sube y si no hay movimiento se baja a 0
+> frame difference y captura de video, si hay movimiento el volumen de la musica se sube y si no hay movimiento se baja a 0 cancion Innerbloom
 
 ### Enlace a la obra en el editor de p5.js
 
@@ -44,6 +50,7 @@ Diseña e implementa una obra de arte generativa algorítmica interactiva en tie
 ```
 
 ### Captura de pantalla representativa
+
 
 
 
