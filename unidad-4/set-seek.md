@@ -51,9 +51,9 @@ Primero mira esta simulación para el [manejo de ángulos](https://editor.p5js.o
 
   - Esto es porque se esta usando `translate(width/2, height/2)`. Normalmente el origen `(0,0)` está en la esquina superior izquierda del lienzo.
    
-  Si no moviéramos el origen, la rotación ocurriría alrededor de esa esquina, lo cual daría un efecto raro (como que los objetos dieran vueltas en la esquina superior izquierda del canvas).
+    Si no moviéramos el origen, la rotación ocurriría alrededor de esa esquina, lo cual daría un efecto raro (como que los objetos dieran vueltas en la esquina superior izquierda del canvas).
 
-  Con `translate(width/2, height/2)`, el origen del sistema de coordenadas se coloca en el centro del canvas establecido(640x240). Así, la rotación ocurre alrededor del centro, lo que visualmente se siente como un péndulo o un objeto que gira desde el medio.
+    Con `translate(width/2, height/2)`, el origen del sistema de coordenadas se coloca en el centro del canvas establecido(640x240). Así, la rotación ocurre alrededor del centro, lo que visualmente se siente como un péndulo o un objeto que gira desde el medio.
   
 - Cuál es la relación entre el sistema de coordenadas y la función `rotate()`.
 
@@ -61,11 +61,11 @@ Primero mira esta simulación para el [manejo de ángulos](https://editor.p5js.o
     
     <img src="https://github.com/user-attachments/assets/e976268b-d65f-4c9f-8611-8952033dde5f" width="300">
 
-  Entonces todo los objetos que se dibujen despues de `rotate(angle)` van a rotar, como el cuadrado se dibuja antes de la funcion no rota.
+    Entonces todo los objetos que se dibujen despues de `rotate(angle)` van a rotar, como el cuadrado se dibuja antes de la funcion no rota.
 
-Nota esta parte del código:
+- Nota esta parte del código:
 
-```
+```js
   line(-50, 0, 50, 0);
   stroke(0);
   strokeWeight(2);
@@ -74,13 +74,39 @@ Nota esta parte del código:
   circle(-50, 0, 16);
 ```
 
-Observa que al dibujar los elementos gráficos parece que se está dibujando en la posición `(0, 0)` del sistema de coordenadas. ¿Por qué crees que se hace esto? y ¿Por qué aunque en cada frame se hace lo mismo, los elementos gráficos rotan?
+Observa que al dibujar los elementos gráficos parece que se está dibujando en la posición `(0, 0)` del sistema de coordenadas. 
+
+- ¿Por qué crees que se hace esto?
+
+  - Si no existiera la transformación (`translate` y `rotate`), se estarían dibujando a lo largo del eje X con respecto al origen `(0,0)` en la esquina superior izquierda.
+ 
+    Pero en realidad, antes de dibujarlos, se movio el origen con
+
+    ```js
+    translate(width/2, height/2);
+    ```
+    el cual lo posiciona en la mitad del ancho y alto del canvas. Por eso los objetos parecen estar anclados al centro: porque efectivamente sus coordenadas están medidas desde ese nuevo sistema.
+
+- ¿Por qué aunque en cada frame se hace lo mismo, los elementos gráficos rotan?
+
+  - En cada `draw()` se hace exactamente el mismo código de dibujo (línea y círculos).
+
+    Lo que cambia es la transformación aplicada antes de dibujar:
+
+    ```js
+    rotate(angle);
+    ```
+    Como `angle` va aumentando cada vez que se presiona una tecla, el sistema de coordenadas está rotado un poco más en cada frame.
+    
+    Eso hace que aunque “dibujes lo mismo en (50,0) y (-50,0)”, esas posiciones ya no apuntan en la misma dirección que antes, porque los ejes X-Y están girados.
 
 Ahora analiza una simulación que muestra cómo puedes hacer para que los elementos gráficos de la simulación [apunten en la dirección del movimiento](https://editor.p5js.org/natureofcode/sketches/bZqHGYbRQ).
 
 - Identifica el marco motion 101. ¿Qué es lo que se está haciendo en este marco?
 
-  - 
+  - El marco Motion 101 en este ejemplo consiste en actualizar la posición con la velocidad y la velocidad con la aceleración.
+
+    La aceleración apunta hacia el mouse, de modo que el objeto se ve atraído hacia él, y el ángulo de la velocidad se usa para orientar el objeto en la dirección en la que realmente se mueve
 
 Observa detenidamente este fragmento de código de la simulación:
 
@@ -103,19 +129,52 @@ Observa detenidamente este fragmento de código de la simulación:
 
 - ¿Qué hace la función heading()?
 
-  - 
+  - La función `heading()` es un método que se aplica a los vectores (en este caso, al vector `this.velocity`). Su propósito es calcular y devolver el ángulo de rotación de ese vector en 2D. Este ángulo se mide en relación con el eje X positivo.
+    
+    En el contexto de la simulación, `this.velocity.heading()` da la dirección en la que el objeto se está moviendo
 
 - ¿Qué hace la función push() y pop()? Realiza algunos experimentos para entender su funcionamiento.
 
-  -
+  - Las funciones `push()` y `pop()` trabajan en pareja para guardar y restaurar el "estado" del lienzo. 
+    
+    Piensa en `push()` como "guardar una copia de la configuración actual de dibujo" (colores, grosores de línea, transformaciones como translate y rotate). Después de llamar a `push()`, puedes hacer todos los cambios que quieras.
 
-- ¿Qué hace rectMode(CENTER)? Realiza algunos experimentos para entender su funcionamiento.
+    Cuando llamas a `pop()`, el lienzo "recuerda" y vuelve a la configuración que guardaste con `push()`, descartando todos los cambios que hiciste en medio.
 
-  -
+    ```js
+      rect(-70, 50, 40, 40); // Cuadrado normal
+
+      push(); // Guardamos el estado actual
+      fill(255, 0, 0); // Cambiamos el color a rojo
+      translate(10, 50); // Nos movemos a una nueva posición
+      rotate(PI / 4); // Rotamos 45 grados
+      rect(0, 0, 40, 40); // Dibujamos el cuadrado del centro (en el nuevo origen)
+      pop(); // Restauramos el estado original
+    
+      rect(90, 50, 40, 40); // Este cuadrado no está rotado ni es rojo
+    ```
+
+    <img width="300" src="https://github.com/user-attachments/assets/c262a4fd-9701-48c1-8fb0-bbf0755b5848" />
+
+- ¿Qué hace `rectMode(CENTER)`? Realiza algunos experimentos para entender su funcionamiento.
+
+  - `rectMode(CENTER)` cambia la forma en que p5.js interpreta las coordenadas que se le da a la función `rect()`.
+
+    Por defecto, los dos primeros parámetros de `rect(x, y, ancho, alto)` son la esquina superior izquierda del rectángulo.
+
+    Cuando usamos `rectMode(CENTER)`, los dos primeros parámetros (`x` e `y`) se convierten en el centro del rectángulo. Y la razon es porque por defecto el rect se dibuja desde la esquina hacia abajo y la derecha
+    
+    [Experimento en p5js sketch:](https://editor.p5js.org/DanielZafiro/sketches/TVJoJag0h) y [Video de referencia](https://youtu.be/F7iRdN50jf8)
+
+    <img width="500" src="https://github.com/user-attachments/assets/993af037-252f-4506-9c29-e99809a9ed48" />
+
+
 
 - ¿Cuál es la relación entre el ángulo de rotación y el vector de velocidad? Trata de dibujar en un papel el vector de velocidad y cómo se relaciona con el ángulo de rotación y la operación de traslación y rotación.
 
-  -
+  - La relación es directa y muy importante para lograr que un objeto "mire" hacia donde se mueve.
+
+    El **vector de velocidad** tiene dos componentes: una magnitud (qué tan rápido se mueve) y una dirección (hacia dónde se mueve). La función `this.velocity.heading()` extrae esa **dirección** y la convierte en un **ángulo de rotación**.
 
 </details>
 
@@ -123,6 +182,458 @@ Observa detenidamente este fragmento de código de la simulación:
   <summary>Actividad 3 Practicar un poco</summary><br>
 
 Ahora es momento de practicar los conceptos anterior. Crea una simulación de un vehículo que puedas conducir por la pantalla utilizando las teclas de flecha: la flecha izquierda acelera el vehículo hacia la izquierda, y la flecha derecha acelera hacia la derecha. El vehículo tendrá forma triangular y debe apuntar en la dirección en la que se está moviendo actualmente.
+
+---
+
+<img width="700" src="https://github.com/user-attachments/assets/41ffa3a3-be8a-4230-ad5a-1a7df99303be">
+
+Esta simulación es una aplicación directa de los conceptos de la unidad
+
+<details>
+  <summary>Experimento Sketch.js Simulacion de Vehiculo</summary><br>
+
+1. **Marco Motion 101**: La clase `Vehicle` contiene los tres vectores clave: `position`, `velocity` y `acceleration`.
+
+2. **Fuerzas**: Las teclas de flecha no modifican directamente la posición ni la velocidad. En su lugar, `applyForce()` añade un vector a la `acceleration`. Este es un concepto más realista de la física: las fuerzas causan aceleración. Al reiniciar la aceleración (`this.acceleration.mult(0)`) en cada fotograma, el vehículo solo acelera si se mantienes una tecla presionada.
+
+3. **Orientación y Rotación**: En el método `display()`.
+
+- `let angle = this.velocity.heading() + PI / 2;` es la línea más importante. Extraemos la dirección del movimiento (`this.velocity.heading()`) para saber hacia dónde rotar.
+
+- Usamos `translate(this.position.x, this.position.y)` para mover el origen del sistema de coordenadas a la ubicación del vehículo.
+
+- `rotate(angle)` alinea el lienzo con la dirección del movimiento.
+
+- Finalmente, dibujamos un `triangle()` simple en `(0,0)`. Como todo el sistema de coordenadas ya está movido y rotado, el triángulo aparece en el lugar correcto y apuntando en la dirección correcta. El uso de `push()` y `pop()` asegura que estas transformaciones solo afecten al dibujo de nuestro vehículo.
+
+```js
+let vehicle;
+
+function setup() {
+  createCanvas(640, 360);
+  // Creamos una nueva instancia de la clase Vehicle y la guardamos en la variable
+  vehicle = new Vehicle(width / 2, height / 2);
+}
+
+function draw() {
+  background(220,50);
+
+  // Verificamos si las teclas de flecha están siendo presionadas
+  if (keyIsDown(LEFT_ARROW)) {
+    let force = createVector(-0.1, 0); // vector de fuerza que apunta a la izquierda
+    vehicle.applyForce(force);
+  }
+
+  if (keyIsDown(RIGHT_ARROW)) {
+    let force = createVector(0.1, 0); // vector de fuerza que apunta a la derecha
+    vehicle.applyForce(force);
+  }
+
+  vehicle.update(); // lógica del vehículo (movimiento)
+  vehicle.checkEdges(); // aparezca por el otro lado si se sale de la pantalla
+  vehicle.display(); // Dibujamos el vehículo en su nueva posición y con la rotación correcta
+
+  // Para mostrar la velocidad actual
+  // 1. Calculamos la magnitud del vector de velocidad.
+  let speedMeter = vehicle.velocity.mag();
+  
+  // 2. Preparamos el estilo del texto
+  fill(0);           // Color negro para el texto
+  textSize(16);      // Un tamaño de letra legible
+  noStroke();        // El texto se ve mejor sin borde
+  
+  // 3. Dibujamos el texto y toFixed(2) para redondear el valor a 2 decimales y que no ocupe toda la pantalla.
+  text("Velocidad: " + speedMeter.toFixed(2), 260, 150);
+}
+
+// --- Clase Vehicle ---
+class Vehicle {
+  constructor(x, y) {
+    // El marco Motion 101: Posición, Velocidad y Aceleración
+    this.position = createVector(x, y);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    
+    // Propiedades adicionales para controlar el comportamiento
+    this.r = 6; // Tamaño del vehículo para el triángulo
+    this.topspeed = 4; // Límite de velocidad
+  }
+
+  // Método para aplicar una fuerza (como la de las teclas)
+  applyForce(force) {
+    // La fuerza se suma a la aceleración (F=ma, si m=1, F=a)
+    this.acceleration.add(force);
+  }
+
+  // Método principal que actualiza el estado del vehículo en cada fotograma
+  update() {
+    // La velocidad cambia por la aceleración
+    this.velocity.add(this.acceleration);
+    // Limitamos la velocidad para que no vaya infinitamente rápido
+    this.velocity.limit(this.topspeed);
+    // La posición cambia por la velocidad
+    this.position.add(this.velocity);
+    // Reiniciamos la aceleración a 0 en cada ciclo para que la fuerza no se acumule
+    this.acceleration.mult(0);
+  }
+
+  // Método para dibujar el vehículo en el lienzo
+  display() {
+    // Aquí está la magia que conecta el movimiento con la rotación:
+    // 1. Obtenemos el ángulo de la dirección del vector de velocidad.
+    // 2. Sumamos PI/2 (90 grados) porque nuestro triángulo lo dibujaremos
+    //    apuntando hacia arriba, y queremos que esa sea la dirección "cero".
+    let angle = this.velocity.heading() + PI / 2;
+
+    push(); // Guardamos el estado del lienzo
+    translate(this.position.x, this.position.y); // 1. Nos movemos al centro del vehículo
+    rotate(angle); // 2. Rotamos el lienzo entero a la dirección del movimiento
+
+    // 3. Dibujamos el triángulo en el origen (0,0) del nuevo sistema de coordenadas
+    fill(127);
+    stroke(0);
+    strokeWeight(1);
+    // Los puntos del triángulo están definidos relativos a su centro (0,0)
+    // - (0, -r*2) es la punta superior
+    // - (-r, r) es la esquina inferior izquierda
+    // - (r, r) es la esquina inferior derecha
+    triangle(0, -this.r * 2, -this.r, this.r, this.r, this.r);
+
+    pop(); // Restauramos el estado del lienzo para no afectar a otros dibujos
+  }
+
+  // Método para que el vehículo "envuelva" la pantalla
+  checkEdges() {
+    if (this.position.x > width + this.r) {
+      this.position.x = -this.r;
+    } else if (this.position.x < -this.r) {
+      this.position.x = width + this.r;
+    }
+
+    if (this.position.y > height + this.r) {
+      this.position.y = -this.r;
+    } else if (this.position.y < -this.r) {
+      this.position.y = height + this.r;
+    }
+  }
+}
+```
+</details>
+
+---
+
+<img width="500" src="https://github.com/user-attachments/assets/4566ae4d-ba36-4fe5-9fef-c8247260d90c">
+
+La diferencia fundamental es que ahora la orientación del vehículo y su dirección de movimiento no son necesariamente la misma cosa.
+
+En el modelo anterior, el vehículo siempre apuntaba en la dirección en que se movía. Ahora, se puede girar el vehículo y luego decidir si se quiere acelerar en esa nueva dirección.
+
+<details>
+  <summary>Experimento apartir del ejercicio 3.6 del libro guia</summary><br>
+
+1.  **Separación de Ángulo y Velocidad**: El cambio más importante es la adición de la propiedad `this.angle` en la clase `Vehicle`. Ahora, el vehículo tiene una orientación propia que no depende de hacia dónde se está moviendo.
+
+      * En el método `display()`, la línea `rotate()` ahora usa `this.angle` en lugar de `this.velocity.heading()`. Esto significa que el triángulo apunta hacia donde tú le dices con las flechas.
+
+2.  **Nuevos Controles**:
+
+      * **Giro (`turn`)**: Las flechas izquierda y derecha ya no aplican una fuerza lateral. En su lugar, llaman al nuevo método `vehicle.turn()`, que simplemente suma o resta un pequeño valor al `this.angle`, haciendo que el vehículo gire sobre su propio eje.
+      * **Empuje (`thrust`)**: La barra espaciadora llama al método `vehicle.thrust()`. Este método es clave:
+          * `p5.Vector.fromAngle(this.angle)` crea un vector que apunta en la misma dirección que el vehículo.
+          * Luego, este vector se aplica como una fuerza. El resultado es que el vehículo acelera en la dirección a la que está apuntando su "nariz".
+
+3.  **Fricción/Arrastre**: Añadí `this.velocity.mult(0.99)` en el método `update()`. Esto frena muy ligeramente el vehículo en cada fotograma. Sin esto, una vez que aceleras, el vehículo nunca se detendría (como en el espacio profundo). Esta pequeña fricción hace que el control se sienta más "jugable" y menos rígido.
+
+```js
+let vehicle;
+
+function setup() {
+  createCanvas(640, 360);
+  vehicle = new Vehicle(width / 2, height / 2);
+}
+
+function draw() {
+  background(220);
+
+  // --- NUEVA LÓGICA DE CONTROLES ---
+
+  // 1. Girar el vehículo
+  if (keyIsDown(LEFT_ARROW)) {
+    vehicle.turn(-0.05); // Pasamos un valor negativo para girar a la izquierda
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    vehicle.turn(0.05);  // Pasamos un valor positivo para girar a la derecha
+  }
+
+  // 2. Aplicar empuje (aceleración)
+  // El código de la barra espaciadora es 32
+  if (keyIsDown(32)) {
+    vehicle.thrust();
+  }
+
+  // Actualizamos y dibujamos el vehículo
+  vehicle.update();
+  vehicle.checkEdges();
+  vehicle.display();
+
+  // Mantenemos el medidor de velocidad
+  let speedMeter = vehicle.velocity.mag();
+  fill(0);
+  textSize(16);
+  noStroke();
+  text("Velocidad: " + speedMeter.toFixed(2), 10, 20);
+}
+
+
+// --- Clase Vehicle (con cambios importantes) ---
+
+class Vehicle {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    
+    // ¡NUEVO! Añadimos una propiedad para el ángulo y la velocidad de giro
+    this.angle = 0; // El ángulo de orientación, independiente de la velocidad
+    
+    this.r = 6;
+    this.topspeed = 6;
+  }
+
+  applyForce(force) {
+    this.acceleration.add(force);
+  }
+
+  // ¡NUEVO! Un método para aplicar empuje (thrust)
+  thrust() {
+    // Creamos un vector de fuerza a partir del ángulo actual del vehículo
+    // p5.Vector.fromAngle() crea un vector unitario (longitud 1) a partir de un ángulo.
+    let force = p5.Vector.fromAngle(this.angle);
+    // Podemos multiplicar para darle más o menos potencia al empuje
+    force.mult(0.1);
+    this.applyForce(force);
+  }
+  
+  // ¡NUEVO! Un método para girar
+  turn(angle) {
+    this.angle += angle;
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    // ¡NUEVO! Añadimos un poco de "fricción" o "arrastre" (damping)
+    // para que el vehículo no acelere infinitamente y se sienta más controlable.
+    // Multiplicar por un número < 1 en cada frame lo frena lentamente.
+    this.velocity.mult(0.99); 
+    this.velocity.limit(this.topspeed);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  display() {
+    // ¡CAMBIO CLAVE! La rotación ahora depende de `this.angle`,
+    // no de la dirección de la velocidad (this.velocity.heading()).
+    
+    push();
+    translate(this.position.x, this.position.y);
+    // Sumamos PI/2 porque nuestro triángulo lo dibujamos "apuntando hacia arriba"
+    rotate(this.angle + PI / 2);
+
+    fill(127);
+    stroke(0);
+    strokeWeight(1);
+    triangle(0, -this.r * 2, -this.r, this.r, this.r, this.r);
+
+    pop();
+  }
+
+  checkEdges() {
+    if (this.position.x > width + this.r) {
+      this.position.x = -this.r;
+    } else if (this.position.x < -this.r) {
+      this.position.x = width + this.r;
+    }
+    if (this.position.y > height + this.r) {
+      this.position.y = -this.r;
+    } else if (this.position.y < -this.r) {
+      this.position.y = height + this.r;
+    }
+  }
+}
+```
+
+</details>
+
+---
+
+<img width="500" src="https://github.com/user-attachments/assets/3ba14821-5ea6-4c00-93e2-cab2f3a732ff">
+
+Este modelo es fundamentalmente diferente a los anteriores. Pasamos de simular un solo punto a simular un **cuerpo rígido con partes móviles**.
+
+<details>
+  <summary>Experimento 3 vehiculo motocicleta</summary><br>
+
+1.  **Un Sistema de Dos Puntos**: La motocicleta no tiene una única `position`. En su lugar, se define por las posiciones de `this.rearWheel` y `this.frontWheel`. Todos los demás atributos (como la dirección `heading` y la velocidad `speed`) actúan sobre estos dos puntos.
+
+2.  **La Magia del Giro**: La parte más importante está en la función `update()`:
+
+      * Primero, movemos la rueda delantera. Su dirección de movimiento no es la del chasis, sino la del chasis **más** el ángulo del manubrio (`this.heading + this.steerAngle`). Aquí es donde ocurre el "giro".
+      * Luego, la rueda trasera tiene que seguirla. Lo hacemos calculando dónde debería estar para mantener la distancia del `chassisLength` con la nueva posición de la rueda delantera. Esto hace que la parte trasera de la moto sea "arrastrada" por la delantera, creando una curva de giro muy natural.
+      * Finalmente, actualizamos el `heading` (la dirección del chasis) para que refleje el nuevo ángulo entre las dos ruedas.
+
+3.  **Visualización Compuesta**: El método `display()` también es más complejo. Ya no basta con un solo `translate` y `rotate`. Dibujamos el chasis y las ruedas en sus posiciones absolutas. Para el manubrio, usamos `push()`, `translate()` y `rotate()` para dibujarlo en la posición de la rueda delantera y con la orientación correcta, demostrando visualmente cómo está girando.
+
+
+```js
+let moto;
+
+function setup() {
+  createCanvas(640, 480);
+  // Creamos la moto en el centro de la pantalla
+  moto = new Motorcycle(width / 2, height / 2);
+}
+
+function draw() {
+  background(220);
+
+  // --- CONTROLES ---
+  // Acelerador con la flecha de arriba
+  if (keyIsDown(UP_ARROW)) {
+    moto.accelerate(0.1);
+  }
+  
+  // Giro con las flechas izquierda y derecha
+  if (keyIsDown(LEFT_ARROW)) {
+    moto.steer(-0.05);
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    moto.steer(0.05);
+  }
+
+  moto.update();
+  moto.checkEdges();
+  moto.display();
+  
+  // Información en pantalla
+  fill(0);
+  noStroke();
+  textSize(14);
+  text("Usa las flechas para moverte", 10, 20);
+  text(`Velocidad: ${moto.speed.toFixed(2)}`, 10, 40);
+  text(`Ángulo de giro: ${(degrees(moto.steerAngle)).toFixed(1)}°`, 10, 60);
+}
+
+
+// --- Clase Motorcycle ---
+
+class Motorcycle {
+  constructor(x, y) {
+    this.chassisLength = 30; // Distancia entre las ruedas
+    
+    // En lugar de una sola posición, ahora tenemos dos: una para cada rueda
+    this.rearWheel = createVector(x - this.chassisLength / 2, y);
+    this.frontWheel = createVector(x + this.chassisLength / 2, y);
+    
+    this.speed = 0; // Velocidad de la moto
+    this.heading = 0; // Dirección general de la moto (el ángulo del chasis)
+    this.steerAngle = 0; // El ángulo de giro del manubrio
+    
+    this.maxSteerAngle = PI / 4; // Límite de giro (45 grados)
+    this.maxSpeed = 5;
+  }
+
+  // --- MÉTODOS DE CONTROL ---
+  
+  accelerate(amount) {
+    this.speed += amount;
+    if (this.speed > this.maxSpeed) {
+      this.speed = this.maxSpeed;
+    }
+  }
+  
+  steer(amount) {
+    this.steerAngle += amount;
+    // Limitar el ángulo de giro para que no sea irreal
+    if (this.steerAngle > this.maxSteerAngle) {
+      this.steerAngle = this.maxSteerAngle;
+    } else if (this.steerAngle < -this.maxSteerAngle) {
+      this.steerAngle = -this.maxSteerAngle;
+    }
+  }
+  
+  // --- LÓGICA PRINCIPAL ---
+
+  update() {
+    // 1. La rueda delantera se mueve
+    // Su dirección es la suma del ángulo del chasis + el ángulo del manubrio
+    let frontWheelDirection = this.heading + this.steerAngle;
+    let velocity = p5.Vector.fromAngle(frontWheelDirection);
+    velocity.mult(this.speed);
+    this.frontWheel.add(velocity);
+
+    // 2. La rueda trasera "persigue" a la delantera
+    // Calculamos el vector que va de la rueda delantera a la trasera
+    let dir = p5.Vector.sub(this.rearWheel, this.frontWheel);
+    // Ajustamos la longitud de ese vector para que sea igual a la del chasis
+    dir.setMag(this.chassisLength);
+    // La nueva posición de la rueda trasera es la de la delantera más ese vector
+    this.rearWheel = p5.Vector.add(this.frontWheel, dir);
+
+    // 3. Recalculamos el 'heading' general de la moto
+    // Es el ángulo del vector que va de la rueda trasera a la delantera
+    this.heading = p5.Vector.sub(this.frontWheel, this.rearWheel).heading();
+
+    // 4. Aplicamos fricción para que la moto se detenga eventualmente
+    this.speed *= 0.99; 
+    // Y el manubrio tiende a enderezarse
+    this.steerAngle *= 0.95; 
+  }
+
+  display() {
+    // Dibujamos el chasis (el cuerpo de la moto)
+    stroke(0);
+    strokeWeight(4);
+    line(this.rearWheel.x, this.rearWheel.y, this.frontWheel.x, this.frontWheel.y);
+
+    // Dibujamos las ruedas
+    strokeWeight(2);
+    fill(127);
+    circle(this.rearWheel.x, this.rearWheel.y, 16);
+    circle(this.frontWheel.x, this.frontWheel.y, 16);
+    
+    // Dibujamos el "manubrio" para visualizar el giro
+    push();
+    translate(this.frontWheel.x, this.frontWheel.y);
+    // Lo rotamos con la dirección completa de la rueda delantera
+    rotate(this.heading + this.steerAngle);
+    stroke(255, 0, 0); // Rojo para que se note
+    strokeWeight(3);
+    line(-10, 0, 10, 0);
+    pop();
+  }
+
+  checkEdges() {
+    if (this.frontWheel.x > width) {
+        this.frontWheel.x = 0;
+        this.rearWheel.x = 0;
+    } else if (this.frontWheel.x < 0) {
+        this.frontWheel.x = width;
+        this.rearWheel.x = width;
+    }
+    if (this.frontWheel.y > height) {
+        this.frontWheel.y = 0;
+        this.rearWheel.y = 0;
+    } else if (this.frontWheel.y < 0) {
+        this.frontWheel.y = height;
+        this.rearWheel.y = height;
+    }
+  }
+}
+```
+
+</details>
+
+---
 
 </details>
 
@@ -258,4 +769,5 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
