@@ -1071,6 +1071,43 @@ Vas a observar [este](https://editor.p5js.org/natureofcode/sketches/CQ19Yw0iT) c
 
 El reto es que hagas que se esta onda se mueva como una ola.
 
+<img width="500" src="https://github.com/user-attachments/assets/a310abd8-7837-48f3-840d-d67d9a72aea0">
+
+[Link al sketch en p5js](https://editor.p5js.org/DanielZafiro/sketches/Ag9VUtkCS)
+
+
+**Análisis del Código Inicial y el Reto**
+
+La actividad comenzó con un fragmento de código que dibujaba una serie de círculos dispuestos en una perfecta curva sinusoidal. El objetivo era tomar esta imagen estática y darle vida, haciendo que se "mueva como una ola".
+
+Al analizar el código inicial, el problema fundamental era evidente: toda la lógica de dibujo se encontraba dentro de la función `setup()`. Dado que `setup()` se ejecuta una única vez al iniciar el programa, el resultado era una "fotografía" de una onda, en lugar de una animación continua.
+
+El reto, por lo tanto, era transformar esta lógica de dibujo estático en un sistema dinámico que se actualizara en cada fotograma.
+
+---
+
+**Proceso de Implementación y Solución**
+
+Para lograr el efecto de una ola en movimiento, realicé los siguientes cambios conceptuales y técnicos:
+
+**1. Transición de `setup()` a `draw()`:**
+El primer paso y el más crucial fue trasladar el bucle `for` que dibuja los círculos desde `setup()` a la función `draw()`. Para que esto funcionara como una animación, fue necesario añadir `background()` al inicio de `draw()`, asegurando que el lienzo se limpiara en cada fotograma y evitando que las ondas se dibujaran unas sobre otras.
+
+**2. Creación del Movimiento con una Fase Variable (`startAngle`):**
+Simplemente mover el bucle a `draw()` no era suficiente. Se necesitaba una forma de hacer que la onda se desplazara en cada fotograma. Para ello, introduje una nueva variable global llamada `startAngle`.
+
+Esta variable actúa como la **fase** o el punto de partida de la onda. En cada ciclo de `draw()`, `startAngle` se incrementa en una pequeña cantidad (controlada por una variable `speed`). La variable `angle` utilizada dentro del bucle `for` se inicializa con este `startAngle` en constante cambio. El resultado es que la onda completa se redibuja en cada fotograma, pero ligeramente desplazada respecto al anterior, creando una fluida ilusión de movimiento.
+
+**3. Clarificación de Conceptos: `angleFreq` vs. `speed`**
+Durante el proceso, surgió una pregunta importante sobre la terminología. La simulación final utiliza dos variables para controlar el cambio de ángulo:
+
+* **`speed` (Velocidad Angular Temporal):** Controla el incremento de `startAngle` en cada fotograma. Define qué tan rápido se **mueve** la ola a través del lienzo (su cambio en el **tiempo**).
+* **`angleFreq` (Frecuencia Angular Espacial):** Controla el incremento de `angle` para cada círculo a lo largo del eje X. Define qué tan "apretada" o "estirada" es la forma de la onda (su cambio en el **espacio**).
+
+Hacer esta distinción y renombrar la variable original de `angleVelocity` a `angleFreq` fue un paso clave para clarificar la intención del código y entender mejor la física de la simulación de ondas.
+
+---
+
 </details>
 
 <details>
@@ -1089,6 +1126,7 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
 
 
