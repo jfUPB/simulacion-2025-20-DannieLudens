@@ -744,7 +744,7 @@ function draw() {
 }
 ```
 
-<img width="300" src="https://github.com/user-attachments/assets/ebe5ee79-6a6d-4012-a23e-2b3e07e7c4b7">
+<img width="200" src="https://github.com/user-attachments/assets/ebe5ee79-6a6d-4012-a23e-2b3e07e7c4b7">
 
 
 - ¿Cuál es la relación entre `r` y `theta` con las posiciones `x` y `y`? Puedes repasar entonces la definición de coordenadas polares y cómo se convierten a coordenadas cartesianas.
@@ -818,7 +818,7 @@ Ahora realiza esta modificación:
 }
 ```
 
-<img width="300" src="https://github.com/user-attachments/assets/7ad80d84-d499-4e52-bd32-78dba6dcf389">
+<img width="200" src="https://github.com/user-attachments/assets/7ad80d84-d499-4e52-bd32-78dba6dcf389">
 
 
 - ¿Qué ocurre aquí? ¿Por qué?
@@ -850,8 +850,6 @@ Ahora realiza esta modificación:
 
     Este ejercicio demuestra una forma más moderna y orientada a objetos (usando vectores) de lograr el mismo objetivo.
 
-
-
 </details>
 
 <details>
@@ -861,13 +859,140 @@ Repasa la función sinusoide [aquí](https://es.wikipedia.org/wiki/Sinusoide).
 
 - Recuerda estos conceptos: velocidad angular, frecuencia, periodo, amplitud y fase.
 
-  -
+Conceptos Fundamentales de la Sinusoide
+
+Antes de construir la simulación, es crucial tener claros los conceptos. Pensemos en un punto que se mueve en un círculo. La función seno describe la posición *vertical* de ese punto a lo largo del tiempo.
+
+  * **Amplitud:** Es la distancia máxima que la onda alcanza desde su punto central o de equilibrio. En términos simples, es la **"altura" de la onda**.
+
+    * Si un péndulo se mueve 10 cm a cada lado de su centro, su amplitud es 10 cm. En la fórmula $y = A \\cdot \\sin(x)$, la amplitud es $A$.
+
+  * **Periodo ($T$):** Es el **tiempo** que tarda la onda en completar un ciclo completo antes de empezar a repetirse.
+  
+    * Si una ola en el mar tarda 5 segundos en subir, bajar y volver al punto inicial, su periodo es de 5 segundos.
+
+    * En p5.js, el "tiempo" a menudo se mide en `frameCount`, por lo que el periodo sería el número de fotogramas que tarda una oscilación.
+
+  * **Frecuencia ($f$):** Es la inversa del periodo ($f = 1/T$). Representa **cuántos ciclos completos** ocurren en una unidad de tiempo. Si el periodo es de 120 fotogramas, la frecuencia es de 1/120 ciclos por fotograma.
+
+    * Una frecuencia alta significa oscilaciones rápidas; una frecuencia baja significa oscilaciones lentas.
+
+  * **Velocidad Angular ($\\omega$ omega):** Es la velocidad con la que cambia el ángulo, medida en radianes por unidad de tiempo.
+
+    * Un ciclo completo corresponde a una vuelta completa, que son $2\\pi$ radianes (`TWO_PI` en p5.js).
+
+    * La relación con el periodo es directa: para recorrer $2\\pi$ radianes en un tiempo $T$, la velocidad angular debe ser $\\omega = 2\\pi / T$. Este es el valor que multiplica al tiempo dentro de la función seno.
+
+    En el código del ejemplo de abajo de ideas que nos da el profe jugando solo con la fase, `(TWO_PI * frameCount) / period` representa `ω * tiempo`.
+
+  * **Fase ($\\phi$ phi):** Es el **desplazamiento inicial** de la onda en el tiempo $t=0$.
+
+    * En términos visuales, la fase desplaza la onda horizontalmente.
+
+    * Un desfase de $\\pi/2$ (90 grados) convierte una función seno en una función coseno.
+
+    En el código del ejemplo de abajo de ideas que nos da el profe jugando solo con la fase, al presionar una tecla, se modifica la fase de la segunda bola, haciendo que su ciclo ya no esté sincronizado con el de la primera.
+
 
 - Realiza una simulación en la que puedas modificar estos parámetros y observar cómo se comporta la función sinusoide.
 
-  - 
+  - <img width="500" src="https://github.com/user-attachments/assets/70c7a1ac-0892-4973-a88f-b0884c423078">
+
+  - [Link al sketch.js en p5js](https://editor.p5js.org/DanielZafiro/sketches/O2ax-d6hv)
+
+  <details>
+    <summary>sketch.js codigo</summary>
+    
+  ```js
+  // Sliders para controlar los parámetros de la onda
+  let ampSlider, periodSlider, phaseSlider;
+  
+  // Párrafos para mostrar los valores
+  let ampLabel, periodLabel, phaseLabel;
+  
+  function setup() {
+    createCanvas(640, 480);
+    
+    // --- Crear Sliders ---
+    // createSlider(min, max, valorInicial, paso);
+    
+    // Slider para la Amplitud
+    ampSlider = createSlider(0, height / 2, 45, 1);
+    ampSlider.position(20, 20);
+    createP('Amplitud').position(180, 5); // Etiqueta
+    
+    // Slider para el Periodo
+    periodSlider = createSlider(10, 600, 50, 1);
+    periodSlider.position(20, 50);
+    createP('Periodo').position(180, 35); // Etiqueta
+    
+    // Slider para la Fase
+    phaseSlider = createSlider(0, TWO_PI, 0, 0.01);
+    phaseSlider.position(20, 80);
+    createP('Fase').position(180, 65); // Etiqueta
+  }
+  
+  function draw() {
+    background(255);
+    
+    // --- Leer los valores de los sliders en cada fotograma ---
+    let amplitude = ampSlider.value();
+    let period = periodSlider.value();
+    let phase = phaseSlider.value();
+    
+    // Mostrar los valores actuales de los sliders
+    fill(0);
+    noStroke();
+    text(amplitude, 24 + ampSlider.width, 35);
+    text(period, 24 + periodSlider.width, 65);
+    text(phase.toFixed(2), 24 + phaseSlider.width, 95);
+  
+    // --- Dibujar la Onda ---
+    // Movemos el origen al centro vertical para que la onda oscile alrededor de una línea central
+    translate(0, height / 2);
+  
+    noFill();
+    stroke(0);
+    strokeWeight(2);
+    
+    beginShape();
+    // Recorremos el lienzo horizontalmente
+    for (let x = 0; x <= width; x++) {
+      // Calculamos la velocidad angular a partir del periodo
+      let angularVelocity = TWO_PI / period;
+      
+      // Calculamos el ángulo basado en la posición x.
+      // Esto es un poco diferente al 'frameCount', nos permite dibujar la onda completa estática.
+      let angle = angularVelocity * x;
+      
+      // La fórmula completa de la sinusoide
+      let y = amplitude * sin(angle + phase);
+      
+      // Añadimos el punto a la forma de la onda
+      vertex(x, y);
+    }
+    endShape();
+    
+    // --- Dibujar el Oscilador (la bolita) ---
+    // La bolita sí se moverá con el tiempo (frameCount)
+    
+    let timeAngle = (TWO_PI / period) * frameCount;
+    let oscillatorY = amplitude * sin(timeAngle + phase);
+    
+    stroke(255, 0, 0);
+    fill(255, 0, 0, 150);
+    // Dibujamos una línea desde el centro hasta la bolita
+    line(width / 2, 0, width / 2, oscillatorY);
+    // Dibujamos la bolita
+    circle(width / 2, oscillatorY, 32);
+  }
+  ```
+  </details>
 
 Por ejemplo, te doy ideas, si juego solo con la fase, mira [este ejemplo](https://editor.p5js.org/juanferfranco/sketches/201gcBvjy).
+
+<img width="500" src="https://github.com/user-attachments/assets/0fbb2120-6f15-4673-a95e-716903632b43">
+
 
 </details>
 
@@ -903,6 +1028,7 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
 
 
