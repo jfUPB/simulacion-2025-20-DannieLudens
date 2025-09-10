@@ -725,9 +725,7 @@ Explora otro sistema de coordenadas útil cuando se trabaja con ángulos. Se tra
 
 Considera esta simulación de [coordenadas polares](https://editor.p5js.org/juanferfranco/sketches/fE5rCtDS1):
 
-- Observa de nuevo esta parte del código ¿Cuál es la relación entre r y theta con las posiciones x y y? Puedes repasar entonces la definición de coordenadas polares y cómo se convierten a coordenadas cartesianas.
-
-  - 
+Observa de nuevo esta parte del código 
 
 ```js
 function draw() {
@@ -735,38 +733,74 @@ function draw() {
   // Translate the origin point to the center of the screen
   translate(width / 2, height / 2);
   // Convert polar to cartesian
-  let x = r * cos(theta);
-  let y = r * sin(theta);
+  let x = r * cos(theta); // <--
+  let y = r * sin(theta); // <--
   fill(127);
   stroke(0);
   strokeWeight(2);
-  line(0, 0, x, y);
-  circle(x, y, 48);
+  line(0, 0, x, y); // <--
+  circle(x, y, 48); // <--
   theta += 0.02;
 }
 ```
 
-Modifica la función `draw()`:
+<img width="300" src="https://github.com/user-attachments/assets/ebe5ee79-6a6d-4012-a23e-2b3e07e7c4b7">
+
+
+- ¿Cuál es la relación entre `r` y `theta` con las posiciones `x` y `y`? Puedes repasar entonces la definición de coordenadas polares y cómo se convierten a coordenadas cartesianas.
+
+  - La relación es la definición misma de la conversión de coordenadas polares a cartesianas, y se basa en trigonometría básica.
+    
+    * **Coordenadas Polares (`r`, `θ`):** Describen un punto en el espacio por su **distancia** al origen (`r`, el radio) y su **ángulo** de rotación alrededor de ese origen (`θ`, theta). Es como decir "camina 5 metros en un ángulo de 45 grados".
+   
+    * **Coordenadas Cartesianas (`x`, `y`):** Describen el mismo punto por su posición en los ejes horizontal (`x`) y vertical (`y`). Es como decir "camina 3.5 metros al este y luego 3.5 metros al norte".
+   
+      La simulación usa las siguientes fórmulas para convertir de polar a cartesiano:
+      
+      $$x = r \cdot \cos(\theta)$$
+      
+      $$y = r \cdot \sin(\theta)$$
+
+      Visualmente, `r` es la hipotenusa de un triángulo rectángulo, y `θ` es el ángulo en el origen. Las coordenadas `x` (cateto adyacente) e `y` (cateto opuesto) se calculan usando las funciones trigonométricas `coseno` y `seno`.
+
+      En el código, `r` es un valor fijo (`height * 0.25`), por lo que la distancia al centro no cambia. Lo que sí cambia es `theta` (`theta += 0.02`), que aumenta un poco en cada fotograma. Esto hace que el punto gire alrededor del centro a una distancia constante, creando un movimiento circular perfecto.
+
+
+ahora, Modifica la función `draw()` asi:
 
 ```js
  function draw() {
   background(255);
   // Translate the origin point to the center of the screen
   translate(width / 2, height / 2);
-  let v = p5.Vector.fromAngle(theta);
+  let v = p5.Vector.fromAngle(theta); // <--
   fill(127);
   stroke(0);
   strokeWeight(2);
   line(0, 0, x, y);
-  circle(v.x, v.y, 48);
+  circle(v.x, v.y, 48); // <--
   theta += 0.02;
 }
 ```
 
 - ¿Qué ocurre? ¿Por qué?
 
-  - 
+  - <img width="325" height="279" alt="Arc_cJKkAY6rib" src="https://github.com/user-attachments/assets/86b261f9-2c45-4872-988f-4162ddc53046" />
 
+  
+  - error `ReferenceError: x is not defined` ocurre porque en esa primera modificación, el código **elimina** las líneas que creaban las variables `x` e `y`:
+    ```js
+    // Estas líneas fueron borradas en la primera modificación 
+    let x = r * cos(theta);
+    let y = r * sin(theta);
+    ```
+    Y las reemplazamos con:
+    ```js
+    let v = p5.Vector.fromAngle(theta);
+    ```
+    Como las variables `x` e `y` ya no existen, cuando el programa llega a la instrucción `line(0, 0, x, y);` se detiene y dice "No sé qué son ni 'x' ni 'y'".
+
+    
 Ahora realiza esta modificación:
 
 ```js
@@ -774,19 +808,49 @@ Ahora realiza esta modificación:
   background(255);
   // Translate the origin point to the center of the screen
   translate(width / 2, height / 2);
-  let v = p5.Vector.fromAngle(theta,r);
+  let v = p5.Vector.fromAngle(theta,r); // <--
   fill(127);
   stroke(0);
   strokeWeight(2);
-  line(0, 0, v.x, v.y);
-  circle(v.x, v.y, 48);
+  line(0, 0, v.x, v.y); // <--
+  circle(v.x, v.y, 48); // <--
   theta += 0.02;
 }
 ```
 
+<img width="300" src="https://github.com/user-attachments/assets/7ad80d84-d499-4e52-bd32-78dba6dcf389">
+
+
 - ¿Qué ocurre aquí? ¿Por qué?
 
-  - 
+  - La simulación se comporta **exactamente igual que la versión original**. El círculo vuelve a trazar su órbita grande alrededor del centro del lienzo.
+    
+    La nueva línea clave es:
+
+    `let v = p5.Vector.fromAngle(theta, r);`
+
+    Esta es la versión de la función con dos argumentos. Lo que hace es:
+
+    1.  Crea un vector apuntando en la dirección del ángulo `theta`.
+    2.  Establece la magnitud (longitud) de ese vector para que sea igual al segundo argumento, `r`.
+   
+    Esto es, en efecto, un **atajo muy conveniente** que p5.js nos ofrece para hacer la conversión de polar a cartesiano. Esta única línea de código es matemáticamente equivalente a las dos líneas originales:
+
+    ```js
+    // Esto:
+    let v = p5.Vector.fromAngle(theta, r);
+    
+    // Es funcionalmente lo mismo que esto:
+    let x = r * cos(theta);
+    let y = r * sin(theta);
+    // (donde v.x sería igual a x, y v.y sería igual a y)
+    ```
+    
+    Como ahora las funciones `line()` y `circle()` usan `v.x` y `v.y`, que contienen los mismos valores que las variables `x` e `y` originales, el resultado visual es idéntico.
+
+    Este ejercicio demuestra una forma más moderna y orientada a objetos (usando vectores) de lograr el mismo objetivo.
+
+
 
 </details>
 
@@ -839,6 +903,7 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
 
 
