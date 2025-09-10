@@ -896,98 +896,99 @@ Antes de construir la simulación, es crucial tener claros los conceptos. Pensem
 
 - Realiza una simulación en la que puedas modificar estos parámetros y observar cómo se comporta la función sinusoide.
 
-  - <img width="500" src="https://github.com/user-attachments/assets/70c7a1ac-0892-4973-a88f-b0884c423078">
+
+  - <details>
+      <summary>sketch.js codigo</summary><br>
+      
+    ```js
+    // Sliders para controlar los parámetros de la onda
+    let ampSlider, periodSlider, phaseSlider;
+    
+    // Párrafos para mostrar los valores
+    let ampLabel, periodLabel, phaseLabel;
+    
+    function setup() {
+      createCanvas(640, 480);
+      
+      // --- Crear Sliders ---
+      // createSlider(min, max, valorInicial, paso);
+      
+      // Slider para la Amplitud
+      ampSlider = createSlider(0, height / 2, 45, 1);
+      ampSlider.position(20, 20);
+      createP('Amplitud').position(180, 5); // Etiqueta
+      
+      // Slider para el Periodo
+      periodSlider = createSlider(10, 600, 50, 1);
+      periodSlider.position(20, 50);
+      createP('Periodo').position(180, 35); // Etiqueta
+      
+      // Slider para la Fase
+      phaseSlider = createSlider(0, TWO_PI, 0, 0.01);
+      phaseSlider.position(20, 80);
+      createP('Fase').position(180, 65); // Etiqueta
+    }
+    
+    function draw() {
+      background(255);
+      
+      // --- Leer los valores de los sliders en cada fotograma ---
+      let amplitude = ampSlider.value();
+      let period = periodSlider.value();
+      let phase = phaseSlider.value();
+      
+      // Mostrar los valores actuales de los sliders
+      fill(0);
+      noStroke();
+      text(amplitude, 24 + ampSlider.width, 35);
+      text(period, 24 + periodSlider.width, 65);
+      text(phase.toFixed(2), 24 + phaseSlider.width, 95);
+    
+      // --- Dibujar la Onda ---
+      // Movemos el origen al centro vertical para que la onda oscile alrededor de una línea central
+      translate(0, height / 2);
+    
+      noFill();
+      stroke(0);
+      strokeWeight(2);
+      
+      beginShape();
+      // Recorremos el lienzo horizontalmente
+      for (let x = 0; x <= width; x++) {
+        // Calculamos la velocidad angular a partir del periodo
+        let angularVelocity = TWO_PI / period;
+        
+        // Calculamos el ángulo basado en la posición x.
+        // Esto es un poco diferente al 'frameCount', nos permite dibujar la onda completa estática.
+        let angle = angularVelocity * x;
+        
+        // La fórmula completa de la sinusoide
+        let y = amplitude * sin(angle + phase);
+        
+        // Añadimos el punto a la forma de la onda
+        vertex(x, y);
+      }
+      endShape();
+      
+      // --- Dibujar el Oscilador (la bolita) ---
+      // La bolita sí se moverá con el tiempo (frameCount)
+      
+      let timeAngle = (TWO_PI / period) * frameCount;
+      let oscillatorY = amplitude * sin(timeAngle + phase);
+      
+      stroke(255, 0, 0);
+      fill(255, 0, 0, 150);
+      // Dibujamos una línea desde el centro hasta la bolita
+      line(width / 2, 0, width / 2, oscillatorY);
+      // Dibujamos la bolita
+      circle(width / 2, oscillatorY, 32);
+    }
+    ```
+    </details>
 
   - [Link al sketch.js en p5js](https://editor.p5js.org/DanielZafiro/sketches/O2ax-d6hv)
 
-  <details>
-    <summary>sketch.js codigo</summary>
-    
-  ```js
-  // Sliders para controlar los parámetros de la onda
-  let ampSlider, periodSlider, phaseSlider;
-  
-  // Párrafos para mostrar los valores
-  let ampLabel, periodLabel, phaseLabel;
-  
-  function setup() {
-    createCanvas(640, 480);
-    
-    // --- Crear Sliders ---
-    // createSlider(min, max, valorInicial, paso);
-    
-    // Slider para la Amplitud
-    ampSlider = createSlider(0, height / 2, 45, 1);
-    ampSlider.position(20, 20);
-    createP('Amplitud').position(180, 5); // Etiqueta
-    
-    // Slider para el Periodo
-    periodSlider = createSlider(10, 600, 50, 1);
-    periodSlider.position(20, 50);
-    createP('Periodo').position(180, 35); // Etiqueta
-    
-    // Slider para la Fase
-    phaseSlider = createSlider(0, TWO_PI, 0, 0.01);
-    phaseSlider.position(20, 80);
-    createP('Fase').position(180, 65); // Etiqueta
-  }
-  
-  function draw() {
-    background(255);
-    
-    // --- Leer los valores de los sliders en cada fotograma ---
-    let amplitude = ampSlider.value();
-    let period = periodSlider.value();
-    let phase = phaseSlider.value();
-    
-    // Mostrar los valores actuales de los sliders
-    fill(0);
-    noStroke();
-    text(amplitude, 24 + ampSlider.width, 35);
-    text(period, 24 + periodSlider.width, 65);
-    text(phase.toFixed(2), 24 + phaseSlider.width, 95);
-  
-    // --- Dibujar la Onda ---
-    // Movemos el origen al centro vertical para que la onda oscile alrededor de una línea central
-    translate(0, height / 2);
-  
-    noFill();
-    stroke(0);
-    strokeWeight(2);
-    
-    beginShape();
-    // Recorremos el lienzo horizontalmente
-    for (let x = 0; x <= width; x++) {
-      // Calculamos la velocidad angular a partir del periodo
-      let angularVelocity = TWO_PI / period;
-      
-      // Calculamos el ángulo basado en la posición x.
-      // Esto es un poco diferente al 'frameCount', nos permite dibujar la onda completa estática.
-      let angle = angularVelocity * x;
-      
-      // La fórmula completa de la sinusoide
-      let y = amplitude * sin(angle + phase);
-      
-      // Añadimos el punto a la forma de la onda
-      vertex(x, y);
-    }
-    endShape();
-    
-    // --- Dibujar el Oscilador (la bolita) ---
-    // La bolita sí se moverá con el tiempo (frameCount)
-    
-    let timeAngle = (TWO_PI / period) * frameCount;
-    let oscillatorY = amplitude * sin(timeAngle + phase);
-    
-    stroke(255, 0, 0);
-    fill(255, 0, 0, 150);
-    // Dibujamos una línea desde el centro hasta la bolita
-    line(width / 2, 0, width / 2, oscillatorY);
-    // Dibujamos la bolita
-    circle(width / 2, oscillatorY, 32);
-  }
-  ```
-  </details>
+  - <img width="500" src="https://github.com/user-attachments/assets/70c7a1ac-0892-4973-a88f-b0884c423078">
 
 Por ejemplo, te doy ideas, si juego solo con la fase, mira [este ejemplo](https://editor.p5js.org/juanferfranco/sketches/201gcBvjy).
 
@@ -1000,6 +1001,66 @@ Por ejemplo, te doy ideas, si juego solo con la fase, mira [este ejemplo](https:
   <summary>Actividad 7 Repaso de conceptos Unidades anteriores</summary><br>
 
 Aplica conceptos de la unidades anteriores tomando como base [esta](https://editor.p5js.org/natureofcode/sketches/b3HpgJa6F) simulación. La idea es que la modifiques incluyendo un concepto de la unidad 1 (aleatoriedad, distinta a random) y la unidad 3 (fuerzas).
+
+<img width="500" src="https://github.com/user-attachments/assets/624cfd85-98c0-4b34-a68f-ea529ecc5a20">
+
+[Link al sketch en p5js](https://editor.p5js.org/DanielZafiro/sketches/hn4Z-sqoX)
+
+**"Ramitas"** lo llame y se dio accidentalmente, este comportamiento visual se asemeja al de las hojas de los arboles cuando estan siendo sometidos a rafagas de viento, incluso el click del mouse que genera atraccion al dar click replica un viendo fuerte muy direccionado, lo que me permitio modelarlo y cambiarle la estetica, entonces en cada iteracion se crean "ramitas con hojas nuevas" y sometido vientos aleatorio disfrazado de ruido perlin...
+
+**Conceptos Clave Aplicados**
+
+* **Fuerzas (Unidad 2):** Se implementó un sistema de fuerzas acumulativas. La posición final de cada bola(hoja) es el resultado de la suma de la **fuerza de resorte** (que la jala hacia su órbita) y las **fuerzas externas** (como la atracción del mouse).
+* **Ruido Perlin (Unidad 0):** Se utilizó `noise()` para modular un parámetro a lo largo del tiempo (`angleVelocity`), logrando un comportamiento no repetitivo y de apariencia natural.
+* **Vectores:** Fueron la herramienta fundamental para manejar posiciones, velocidades, fuerzas, y para calcular la dirección del movimiento (`.heading()`) y las fuerzas de atracción y resorte (`p5.Vector.sub`).
+* **Oscilación y Transformaciones (Unidad 4):** Se combinó el movimiento oscilatorio trigonométrico (`sin()`) y se utilizaron las transformaciones `translate()` y `rotate()` para dar orientación dinámica a los objetos.
+
+<details>
+  <summary>Proceso de desarrollo de "Ramitas"</summary><br>
+
+**Introducción y Objetivo**
+
+El propósito de esta actividad fue tomar una simulación existente de osciladores y enriquecerla aplicando conceptos de unidades anteriores del libro "The Nature of Code". El punto de partida fue una animación con múltiples osciladores cuyo movimiento, aunque variado en su inicio, era repetitivo y estaba permanentemente anclado al centro del lienzo.
+
+El reto consistía en integrar dos conceptos clave:
+1.  **Unidad 0 (Randomness):** Aplicar una forma de aleatoriedad no repetitiva, como el Ruido Perlin, para dar un comportamiento más orgánico.
+2.  **Unidad 2 (Forces):** Incorporar un sistema de fuerzas para que los osciladores pudieran interactuar con su entorno de manera dinámica.
+
+**Proceso de Desarrollo y Evolución del Prototipo**
+
+El desarrollo no fue lineal, sino un proceso de iteración y refinamiento para llegar a un resultado que fuera funcional y visualmente interesante.
+
+**1. Primer Intento: Integrando Fuerzas con Motion 101**
+
+Inicialmente, modifiqué la clase `Oscillator` para que cada objeto tuviera su propio sistema de movimiento basado en física (posición, velocidad y aceleración). Esto permitió aplicarles fuerzas. Sin embargo, este primer enfoque presentó dos problemas:
+* Los osciladores, al ser empujados por fuerzas como un "viento" constante, se salían del lienzo y se perdían de vista.
+* Se perdió la sensación de "anclaje", que era una característica visualmente atractiva del sistema original, donde parecía que los objetos estaban conectados a un punto central.
+
+**2. Refinamiento del Modelo: El Ancla Elástica**
+
+A raíz de los problemas del primer intento, decidí refactorizar el modelo por completo para combinar lo mejor de ambos mundos. La nueva idea fue crear un sistema de **ancla elástica**:
+
+* **Ancla Fija:** Cada oscilador tiene ahora una propiedad `.anchor`, un punto fijo en el lienzo al que siempre está conectado. Esto soluciona el problema de que los objetos se escapen.
+* **Conexión Elástica (Fuerza de Resorte):** La bola del oscilador ya no está rígidamente en su órbita, sino que es atraída hacia ella por una **fuerza de resorte**. Esto significa que puede ser desplazada de su trayectoria por fuerzas externas.
+* **Fuerzas Externas:** Las fuerzas, como la atracción del mouse, ahora se aplican a la bola, tirando de ella y "estirando" su conexión elástica con el ancla. Al soltar la fuerza, la bola regresa a su órbita de forma natural.
+
+Este modelo resultó mucho más robusto y visualmente satisfactorio.
+
+**3. Integración de Ruido Perlin para un Movimiento Orgánico**
+
+Una vez establecido el sistema de anclaje elástico, procedí a integrar el concepto de la Unidad 0. Para evitar que el patrón de oscilación fuera mecánico y predecible, utilicé la función `noise()` de p5.js para controlar la `angleVelocity` (velocidad angular) de cada oscilador. Al darle a cada objeto un punto de partida único en el espacio del ruido y avanzarlo lentamente en cada fotograma, su velocidad de giro ahora varía de forma suave e impredecible, dando la impresión de un movimiento más "vivo" y natural.
+
+**4. Mejora Visual: Orientación con Triángulos**
+
+Como paso final, y para aplicar directamente los conceptos de orientación de la Unidad 4, reemplacé la bola circular de cada oscilador por un triángulo. El método `show()` fue modificado para:
+1.  Trasladar el origen a la posición actual de la bola (`translate()`).
+2.  Obtener el ángulo de su vector de velocidad (`this.velocity.heading()`).
+3.  Rotar el lienzo a ese ángulo (`rotate()`).
+4.  Dibujar el triángulo, que ahora apunta dinámicamente en la dirección en que se mueve, como si fuera una pequeña hoja de arbol o nave o una criatura nadando.
+
+</details>
+
+---
 
 </details>
 
@@ -1028,6 +1089,7 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
 
 
