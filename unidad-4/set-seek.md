@@ -1067,6 +1067,9 @@ Como paso final, y para aplicar directamente los conceptos de orientación de la
 <details>
   <summary>Actividad 8 Ondas</summary><br>
 
+<img width="500" src="https://github.com/user-attachments/assets/d981ebbf-3749-4a1d-bcd1-285dbb3f4e8f" />
+
+
 Vas a observar [este](https://editor.p5js.org/natureofcode/sketches/CQ19Yw0iT) código que simula una onda.
 
 El reto es que hagas que se esta onda se mueva como una ola.
@@ -1115,7 +1118,90 @@ Hacer esta distinción y renombrar la variable original de `angleVelocity` a `an
 
 Modifica [esta](https://editor.p5js.org/natureofcode/sketches/HZOUeCe9p) simulación para crear un sistema de dos resortes conectados en serie.
 
+<img width="300" src="https://github.com/user-attachments/assets/94096128-d159-402b-a580-7d26bd99daa6"><br>
+
+Antes que nada es importante cual es la solicitud de la actividad:
+
+Conectar resortes **"en serie"** significa unirlos uno después del otro, de extremo a extremo, como los eslabones de una cadena.
+
+Imagina el sistema que tienes ahora:
+
+  * Un punto de anclaje fijo (el "techo").
+  * Un resorte que cuelga de ese anclaje.
+  * Un objeto (`Bob`) que cuelga del final del resorte.
+
+Ahora, para un sistema **en serie**, la estructura se convierte en una cadena más larga:
+
+1.  Sigues teniendo el **punto de anclaje fijo** en la parte superior.
+2.  El **Primer Resorte** cuelga de ese anclaje.
+3.  El final del primer resorte **NO** se conecta directamente al `Bob` final. En su lugar, se conecta a un **Punto de Conexión** intermedio. Este punto de conexión actuará como un "bob" más pequeño y ligero.
+4.  El **Segundo Resorte** se conecta a este punto de conexión intermedio.
+5.  Finalmente, el **`Bob` final** (el que puedes arrastrar) cuelga del extremo del segundo resorte.
+
+Un diagrama simple se vería así:
+
+```
+      O      <-- Punto de Anclaje Fijo (el techo, la posición de spring1)
+      |
+    \/\/\/     <-- Resorte 1 (spring1)
+      |
+      o      <-- Punto de Conexión (un nuevo "bob1" más ligero)
+      |
+    \/\/\/     <-- Resorte 2 (spring2)
+      |
+      O      <-- Bob Final (el "bob2" que puedes arrastrar)
+```
+
+**¿Cómo funciona la física?**
+
+  * El **Punto de Conexión** (el `bob1` del medio) sentirá **dos** fuerzas de resorte: la del resorte de arriba tirando de él hacia arriba, y la del resorte de abajo tirando de él hacia abajo. Además de la gravedad.
+  * El **Bob Final** (`bob2`) solo sentirá **una** fuerza de resorte: la del `spring2` que está justo encima de él, además de la gravedad.
+  * El `Resorte 2` no estará conectado a un punto fijo. Su "ancla" será la posición del `Punto de Conexión` (`bob1`), por lo que su ancla se moverá. **Este es un cambio importante que habrá que considerar en el código.**
+
+---
+
+<details>
+  <summary>Dato Curioso del origen del "Bob"</summary><br>
+
+"Bob" es el término técnico estándar en inglés que se usa en física para describir la masa o el peso que cuelga al final de un péndulo.
+
+En los diagramas de física de habla inglesa, la bola que oscila al final de la cuerda de un péndulo se llama tradicionalmente "**pendulum bob**". En español, a veces se le llama "lenteja" del péndulo.
+
+La razón por la que se le llamó "bob" al péndulo en primer lugar es por el verbo en inglés "to bob". Este verbo significa "moverse arriba y abajo de forma rápida y repetitiva".
+
+Piensa en cosas como:
+
+- Un barco "bobbing" en las olas (oscilando arriba y abajo).
+
+- Un "bobber" de pesca (un flotador o boya) que sube y baja cuando un pez pica.
+
+- Una persona haciendo una reverencia rápida ("bobbing" su cabeza).
+
+El nombre describe perfectamente la acción que realiza el objeto: oscilar. Así que, literalmente, el objeto se llama por el movimiento que hace.
+
 </details>
+
+---
+
+En el código original en el spring.js , el método `connect()` calcula la fuerza y la aplica directamente al `Bob`. Esto nos limita, porque no podemos obtener esa fuerza para aplicarla en la dirección opuesta al otro objeto (como dicta la Tercera Ley de Newton).
+
+Vamos a cambiar `connect()` para que solo **calcule y devuelva** la fuerza. La aplicación de las fuerzas la manejaremos en el `sketch.js`, que nos dará control total.
+
+<img width="300" src="https://github.com/user-attachments/assets/6d8186c4-1be8-4b16-8f32-e1310565b6b1">
+
+
+
+
+**¿Qué logramos con estos cambios?**
+
+1.  **Estructura en Cadena:** El `setup` ahora crea los 4 objetos y los posiciona en una cadena vertical.
+2.  **Ancla Móvil:** La línea `spring2.anchor.set(bob1.position.x, bob1.position.y);` es la clave para que el segundo resorte siga al primero.
+3.  **Física Correcta:** En el `draw`, `bob1` (el del medio) es afectado por la gravedad, la fuerza del resorte 1 (hacia arriba) y la fuerza opuesta del resorte 2 (hacia abajo). `bob2` (el final) es afectado por la gravedad y la fuerza del resorte 2.
+4.  **Interactividad:** Puedes hacer clic y arrastrar el `bob` inferior (`bob2`) y verás cómo todo el sistema reacciona en cadena, un efecto mucho más complejo y orgánico que con un solo resorte.
+
+</details>
+
+
 
 <details>
   <summary>Actividad 10 Péndulos</summary><br>
@@ -1126,6 +1212,7 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
 
 
