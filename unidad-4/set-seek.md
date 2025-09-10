@@ -1187,10 +1187,9 @@ En el código original en el spring.js , el método `connect()` calcula la fuerz
 
 Vamos a cambiar `connect()` para que solo **calcule y devuelva** la fuerza. La aplicación de las fuerzas la manejaremos en el `sketch.js`, que nos dará control total.
 
+[Link al sketch de p5js](https://editor.p5js.org/DanielZafiro/sketches/0FhdKSULO)
+
 <img width="300" src="https://github.com/user-attachments/assets/6d8186c4-1be8-4b16-8f32-e1310565b6b1">
-
-
-
 
 **¿Qué logramos con estos cambios?**
 
@@ -1201,17 +1200,36 @@ Vamos a cambiar `connect()` para que solo **calcule y devuelva** la fuerza. La a
 
 </details>
 
-
-
 <details>
   <summary>Actividad 10 Péndulos</summary><br>
 
-Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulación para crear un sistema de dos péndulos conectados en serie.
+<img width="300" src="https://github.com/user-attachments/assets/aed6ea4e-8111-45aa-ae49-36cf26e2df2f">
+
+- Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulación para crear un sistema de dos péndulos conectados en serie.
+
+El péndulo doble es uno de los ejemplos más fascinantes y clásicos de la **teoría del caos**. A diferencia del péndulo simple, cuyo movimiento es predecible y regular, el péndulo doble se mueve de una forma caótica e impredecible a partir de la más mínima variación en sus condiciones iniciales.
+
+El concepto para construirlo es muy similar al de los resortes en serie: vamos a conectar un péndulo al final del otro.
+
+**La estructura que vamos a crear es la siguiente**:
+
+1.  **Péndulo 1 (Superior):** Tiene un **pivote fijo** en la parte superior del lienzo, igual que en la simulación original.
+2.  **Péndulo 2 (Inferior):** Este es el cambio clave. Su **pivote no es fijo**. El pivote del segundo péndulo será la **posición del `bob` del primer péndulo**.
+
+Esto significa que mientras el primer péndulo oscila, arrastra consigo el punto de anclaje del segundo, creando un sistema dinámico complejo y fascinante.
+
+Toda la lógica para conectar los dos péndulos la manejaremos en `sketch.js`, gracias a cómo está diseñada la clase `Pendulum`, La clase ya es lo suficientemente flexible para aceptar un pivote que se mueva.
+
+[Link al sketch.js en p5js](https://editor.p5js.org/DanielZafiro/sketches/JG11EardV)
+
+<img width="300" src="https://github.com/user-attachments/assets/5243256f-c616-4dd7-a2f8-40bca3db5fbe">
+
 
 </details>
 
   
 </details>
+
 
 
 
