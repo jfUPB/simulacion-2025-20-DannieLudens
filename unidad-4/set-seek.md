@@ -642,9 +642,79 @@ class Motorcycle {
 
 Es momento de retomar lo que has aprendido en las unidades previas e integrarlo con los nuevos conceptos de esta unidad. Observa detenidamente la siguiente simulación: [Motion 101 con fuerzas](https://editor.p5js.org/juanferfranco/sketches/jebkEAUpR)
 
-Identifica motion 101. ¿Qué modificación hay que hacer al motion 101 cuando se quiere agregar fuerzas acumulativas? Trata de recordar por qué es necesario hacer esta modificación.
-Identifica dónde está el Attractor en la simulación. Cambia el color de este.
-Observa que el Attractor tiene dos atributos this.dragging y this.rollover. Estos atributos no se modifican en el código, pero permitirían mover el attractor con el mouse y cambiar su color cuando el mouse está sobre él. ¿Cómo podrías modificar el código para que esto funcione? considera las funciones que ofrece p5.js para [interactuar con el mouse](https://p5js.org/reference/).
+Identifica motion 101. 
+
+- ¿Qué modificación hay que hacer al motion 101 cuando se quiere agregar fuerzas acumulativas? Trata de recordar por qué es necesario hacer esta modificación.
+
+  -  En el mover.js está el Motion 101:
+
+     ```js
+     update() {
+        this.velocity.add(this.acceleration);
+        this.position.add(this.velocity);
+        /*
+        this.angleAcceleration = this.acceleration.x / 10.0;
+        this.angleVelocity += this.angleAcceleration;
+        this.angleVelocity = constrain(this.angleVelocity, -0.1, 0.1);
+        this.angle += this.angleVelocity;
+        */
+        this.acceleration.mult(0);
+      }
+     ```
+     - La aceleración afecta a la velocidad, y la velocidad afecta a la posición en cada fotograma
+
+     - La modificación crucial para manejar fuerzas acumulativas es reiniciar el vector de aceleración a cero al final de cada ciclo de actualización con `this.acceleration.mult(0);`
+
+     **¿Por qué es necesario?**
+     
+     El `draw()` loop funciona como una serie de "fotogramas" o instantes en el tiempo. En cada fotograma, queremos calcular la **fuerza neta** que actúa sobre el objeto. Esta fuerza neta es la suma de todas las fuerzas individuales (en este caso, solo hay una, la del atractor, pero podrían ser más).
+      
+     El proceso es así:
+      
+     1.  **Acumulación**: En el `draw()` loop, llamamos a `movers[i].applyForce(force)`. Este método **suma** la fuerza al vector `this.acceleration`. Si hubiera más fuerzas, las sumaríamos todas aquí.
+     2.  **Aplicación**: En `movers[i].update()`, usamos ese vector de aceleración acumulado para modificar la velocidad.
+     3.  **Reinicio**: Al final de `update()`, hacemos `this.acceleration.mult(0)`. Esto es vital. Si no lo hiciéramos, la fuerza del fotograma actual se quedaría "pegada" y se sumaría a la fuerza del siguiente fotograma, y del siguiente, causando una aceleración infinita y poco realista. Reiniciar la aceleración nos asegura que en cada nuevo fotograma empezamos el cálculo de fuerzas desde cero.
+        
+
+- Identifica dónde está el Attractor en la simulación. 
+
+  - El `Attractor` es el círculo grande, gris y estacionario que se dibuja en el centro del lienzo. Se crea en `sketch.js` con la línea `attractor = new Attractor();`
+
+- Cambia el color de este.
+
+  - para cambiar el color del Attractor en attractor.js:
+
+    ```js
+    // Method to display
+    display() {
+      ellipseMode(CENTER);
+      stroke(0);
+      if (this.dragging) {
+        fill(50);
+      } else if (this.rollover) {
+        fill(100);
+      } else {
+        fill(175, 200); // cambiar a fill(255, 150, 0); para naranjado
+      }
+      ellipse(this.position.x, this.position.y, this.mass * 2);
+    }
+    ```
+
+Observa que el Attractor tiene dos atributos `this.dragging` y `this.rollover`. Estos atributos no se modifican en el código, pero permitirían mover el attractor con el mouse y cambiar su color cuando el mouse está sobre él. 
+
+- ¿Cómo podrías modificar el código para que esto funcione? considera las funciones que ofrece p5.js para [interactuar con el mouse](https://p5js.org/reference/).
+
+  - Para que `this.dragging` y `this.rollover` funcionen, necesitamos usar las funciones de eventos de mouse de p5.js. La idea es:
+
+    1.  **Detectar Rollover**: En cada `draw()`, debemos comprobar si el mouse está sobre el atractor.
+    2.  **Detectar Click**: Cuando se presiona el mouse, debemos comprobar si está sobre el atractor para iniciar el arrastre (`dragging`).
+    3.  **Detectar Arrastre**: Mientras el mouse se arrastra, si el arrastre está activo, movemos el atractor.
+    4.  **Detectar Liberación**: Cuando se suelta el botón, detenemos el arrastre.
+
+    [Cambios realizados en el ejemplo](https://editor.p5js.org/DanielZafiro/sketches/diqZAWXIV)
+
+    <img width="500" src="https://github.com/user-attachments/assets/bd87b79a-8e1d-4679-9b97-ba4e3c7cb3f4">
+
 
 </details>
 
@@ -769,5 +839,6 @@ Modifica [esta](https://editor.p5js.org/natureofcode/sketches/MQZWruTlD) simulac
 
   
 </details>
+
 
 
